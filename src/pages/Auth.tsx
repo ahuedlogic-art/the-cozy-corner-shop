@@ -163,8 +163,11 @@ const Auth = () => {
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-white">Markety — Shop What You Want, We Handle the Delivery<span className="relative inline-block">
-                <span className="relative z-10">Sneakers</span>
+            <h1 className="font-bold text-white font-serif text-3xl">MARKETY
+ 
+
+Shop What You Want, We Handle the Delivery<span className="relative inline-block">
+                <span className="relative z-10">MARKETY</span>
                 <svg className="absolute -bottom-1 left-0 w-full h-3 text-primary" viewBox="0 0 100 12" preserveAspectRatio="none">
                   <path d="M0,6 Q25,0 50,6 T100,6" stroke="currentColor" strokeWidth="3" fill="none" />
                   <path d="M0,6 Q25,12 50,6 T100,6" stroke="currentColor" strokeWidth="3" fill="none" />
