@@ -3,20 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Product } from "@/types/product";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   product: Product;
   onFavoriteToggle?: (productId: string) => void;
-  onAddToCart?: (productId: string) => void;
 }
 
 export const ProductCard = ({
   product,
   onFavoriteToggle,
-  onAddToCart,
 }: ProductCardProps) => {
   const [isFavorite, setIsFavorite] = useState(product.isFavorite);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const { addToCart } = useCart();
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
@@ -101,7 +101,7 @@ export const ProductCard = ({
             variant="price"
             size="sm"
             className="gap-2 rounded-full"
-            onClick={() => onAddToCart?.(product.id)}
+            onClick={() => addToCart(product.id)}
           >
             <ShoppingCart className="h-3.5 w-3.5" />
             <span>${product.price.toFixed(2)}</span>

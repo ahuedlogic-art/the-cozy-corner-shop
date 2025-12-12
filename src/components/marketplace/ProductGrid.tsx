@@ -4,13 +4,11 @@ import { ProductCard } from "./ProductCard";
 interface ProductGridProps {
   products: Product[];
   onFavoriteToggle?: (productId: string) => void;
-  onAddToCart?: (productId: string) => void;
 }
 
 export const ProductGrid = ({
   products,
   onFavoriteToggle,
-  onAddToCart,
 }: ProductGridProps) => {
   if (products.length === 0) {
     return (
@@ -39,7 +37,6 @@ export const ProductGrid = ({
           <ProductCard
             product={product}
             onFavoriteToggle={onFavoriteToggle}
-            onAddToCart={onAddToCart}
           />
         </div>
       ))}

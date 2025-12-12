@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const signupSchema = loginSchema.extend({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+});
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,15 +24,106 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: isLogin ? "Welcome back!" : "Account created!",
-      description: isLogin
-        ? "You have successfully logged in."
-        : "Your account has been created successfully.",
-    });
+    setErrors({});
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        const result = loginSchema.safeParse({ email, password });
+        if (!result.success) {
+          const fieldErrors: Record<string, string> = {};
+          result.error.errors.forEach((err) => {
+            if (err.path[0]) {
+              fieldErrors[err.path[0] as string] = err.message;
+            }
+          });
+          setErrors(fieldErrors);
+          setLoading(false);
+          return;
+        }
+
+        const { error } = await signIn(email, password);
+        if (error) {
+          if (error.message.includes("Invalid login credentials")) {
+            toast({
+              title: "Login failed",
+              description: "Invalid email or password. Please try again.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Login failed",
+              description: error.message,
+              variant: "destructive",
+            });
+          }
+        } else {
+          toast({
+            title: "Welcome back!",
+            description: "You have successfully logged in.",
+          });
+          navigate("/");
+        }
+      } else {
+        const result = signupSchema.safeParse({ email, password, name });
+        if (!result.success) {
+          const fieldErrors: Record<string, string> = {};
+          result.error.errors.forEach((err) => {
+            if (err.path[0]) {
+              fieldErrors[err.path[0] as string] = err.message;
+            }
+          });
+          setErrors(fieldErrors);
+          setLoading(false);
+          return;
+        }
+
+        const { error } = await signUp(email, password, name);
+        if (error) {
+          if (error.message.includes("User already registered")) {
+            toast({
+              title: "Account exists",
+              description: "An account with this email already exists. Please sign in.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Sign up failed",
+              description: error.message,
+              variant: "destructive",
+            });
+          }
+        } else {
+          toast({
+            title: "Account created!",
+            description: "Your account has been created successfully.",
+          });
+          navigate("/");
+        }
+      }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,6 +192,7 @@ const Auth = () => {
                   onChange={(e) => setName(e.target.value)}
                   className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary"
                 />
+                {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
               </div>
             )}
 
@@ -102,6 +205,7 @@ const Auth = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary"
               />
+              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             </div>
 
             <div className="space-y-2">
@@ -122,6 +226,7 @@ const Auth = () => {
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
             </div>
 
             {isLogin && (
@@ -148,8 +253,9 @@ const Auth = () => {
               variant="success"
               size="xl"
               className="w-full rounded-xl"
+              disabled={loading}
             >
-              {isLogin ? "Sign in" : "Create Account"}
+              {loading ? "Please wait..." : isLogin ? "Sign in" : "Create Account"}
             </Button>
           </form>
 
@@ -157,7 +263,10 @@ const Auth = () => {
           <p className="text-center text-gray-400 text-sm">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <button
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setErrors({});
+              }}
               className="text-primary hover:text-primary/80 font-medium transition-colors"
             >
               {isLogin ? "Create an Account" : "Sign in"}
