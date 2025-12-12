@@ -28,7 +28,7 @@ export const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-secondary-foreground">
               <span className="text-primary-foreground font-bold text-lg">M</span>
             </div>
             <span className="font-bold text-xl tracking-tight text-foreground">​MARKETY                     </span>
