@@ -1,0 +1,172 @@
+import { useState } from "react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Link } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
+
+const Auth = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: isLogin ? "Welcome back!" : "Account created!",
+      description: isLogin
+        ? "You have successfully logged in."
+        : "Your account has been created successfully.",
+    });
+  };
+
+  return (
+    <div className="min-h-screen flex dark">
+      {/* Left Panel - Product Showcase */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[hsl(260,60%,20%)] to-[hsl(220,60%,15%)]">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        
+        {/* Back Button */}
+        <Link 
+          to="/"
+          className="absolute top-6 left-6 z-10 flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="text-sm font-medium">Back to Store</span>
+        </Link>
+
+        {/* Product Image */}
+        <div className="flex-1 flex items-center justify-center p-12">
+          <div className="relative">
+            <img
+              src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=500&fit=crop"
+              alt="Featured Sneaker"
+              className="max-w-md w-full rounded-3xl shadow-2xl transform -rotate-12 hover:rotate-0 transition-transform duration-700"
+            />
+            <div className="absolute -bottom-8 left-8 right-8 bg-black/20 backdrop-blur-xl rounded-2xl p-4">
+              <p className="text-white font-semibold text-lg">Air Force 1 Low</p>
+              <div className="flex gap-2 mt-2">
+                <span className="w-2 h-2 rounded-full bg-white" />
+                <span className="w-2 h-2 rounded-full bg-white/40" />
+                <span className="w-2 h-2 rounded-full bg-white/40" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Panel - Auth Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-[hsl(220,30%,12%)]">
+        <div className="w-full max-w-md space-y-8">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold text-white">
+              Best <span className="relative inline-block">
+                <span className="relative z-10">Sneakers</span>
+                <svg className="absolute -bottom-1 left-0 w-full h-3 text-primary" viewBox="0 0 100 12" preserveAspectRatio="none">
+                  <path d="M0,6 Q25,0 50,6 T100,6" stroke="currentColor" strokeWidth="3" fill="none" />
+                  <path d="M0,6 Q25,12 50,6 T100,6" stroke="currentColor" strokeWidth="3" fill="none" />
+                </svg>
+              </span> marketplace
+            </h1>
+            <p className="text-gray-400 text-sm">
+              Buy and sell the hottest sneakers including Adidas Yeezy and Retro Jordans, Supreme streetwear and more.
+            </p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {!isLogin && (
+              <div className="space-y-2">
+                <label className="text-sm text-gray-400">Full Name</label>
+                <Input
+                  type="text"
+                  placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary"
+                />
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400">Email</label>
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400">Password</label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary pr-12"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
+
+            {isLogin && (
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <Checkbox
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(!!checked)}
+                    className="border-gray-600 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  <span className="text-sm text-gray-400">Remember me</span>
+                </label>
+                <button
+                  type="button"
+                  className="text-sm text-primary hover:text-primary/80 transition-colors"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              variant="success"
+              size="xl"
+              className="w-full rounded-xl"
+            >
+              {isLogin ? "Sign in" : "Create Account"}
+            </Button>
+          </form>
+
+          {/* Toggle Auth Mode */}
+          <p className="text-center text-gray-400 text-sm">
+            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            <button
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-primary hover:text-primary/80 font-medium transition-colors"
+            >
+              {isLogin ? "Create an Account" : "Sign in"}
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Auth;
