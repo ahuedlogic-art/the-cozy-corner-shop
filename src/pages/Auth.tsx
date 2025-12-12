@@ -7,16 +7,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { z } from "zod";
-
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters")
 });
-
 const signupSchema = loginSchema.extend({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  name: z.string().min(2, "Name must be at least 2 characters")
 });
-
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -26,27 +23,30 @@ const Auth = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const { signIn, signUp, user } = useAuth();
+  const {
+    signIn,
+    signUp,
+    user
+  } = useAuth();
   const navigate = useNavigate();
-
   useEffect(() => {
     if (user) {
       navigate("/");
     }
   }, [user, navigate]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     setLoading(true);
-
     try {
       if (isLogin) {
-        const result = loginSchema.safeParse({ email, password });
+        const result = loginSchema.safeParse({
+          email,
+          password
+        });
         if (!result.success) {
           const fieldErrors: Record<string, string> = {};
-          result.error.errors.forEach((err) => {
+          result.error.errors.forEach(err => {
             if (err.path[0]) {
               fieldErrors[err.path[0] as string] = err.message;
             }
@@ -55,34 +55,39 @@ const Auth = () => {
           setLoading(false);
           return;
         }
-
-        const { error } = await signIn(email, password);
+        const {
+          error
+        } = await signIn(email, password);
         if (error) {
           if (error.message.includes("Invalid login credentials")) {
             toast({
               title: "Login failed",
               description: "Invalid email or password. Please try again.",
-              variant: "destructive",
+              variant: "destructive"
             });
           } else {
             toast({
               title: "Login failed",
               description: error.message,
-              variant: "destructive",
+              variant: "destructive"
             });
           }
         } else {
           toast({
             title: "Welcome back!",
-            description: "You have successfully logged in.",
+            description: "You have successfully logged in."
           });
           navigate("/");
         }
       } else {
-        const result = signupSchema.safeParse({ email, password, name });
+        const result = signupSchema.safeParse({
+          email,
+          password,
+          name
+        });
         if (!result.success) {
           const fieldErrors: Record<string, string> = {};
-          result.error.errors.forEach((err) => {
+          result.error.errors.forEach(err => {
             if (err.path[0]) {
               fieldErrors[err.path[0] as string] = err.message;
             }
@@ -91,26 +96,27 @@ const Auth = () => {
           setLoading(false);
           return;
         }
-
-        const { error } = await signUp(email, password, name);
+        const {
+          error
+        } = await signUp(email, password, name);
         if (error) {
           if (error.message.includes("User already registered")) {
             toast({
               title: "Account exists",
               description: "An account with this email already exists. Please sign in.",
-              variant: "destructive",
+              variant: "destructive"
             });
           } else {
             toast({
               title: "Sign up failed",
               description: error.message,
-              variant: "destructive",
+              variant: "destructive"
             });
           }
         } else {
           toast({
             title: "Account created!",
-            description: "Your account has been created successfully.",
+            description: "Your account has been created successfully."
           });
           navigate("/");
         }
@@ -119,24 +125,19 @@ const Auth = () => {
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
     }
   };
-
-  return (
-    <div className="min-h-screen flex dark">
+  return <div className="min-h-screen flex dark">
       {/* Left Panel - Product Showcase */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[hsl(260,60%,20%)] to-[hsl(220,60%,15%)]">
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         
         {/* Back Button */}
-        <Link 
-          to="/"
-          className="absolute top-6 left-6 z-10 flex items-center gap-2 text-white/80 hover:text-white transition-colors"
-        >
+        <Link to="/" className="absolute top-6 left-6 z-10 flex items-center gap-2 text-white/80 hover:text-white transition-colors">
           <ArrowLeft className="h-5 w-5" />
           <span className="text-sm font-medium">Back to Store</span>
         </Link>
@@ -144,11 +145,7 @@ const Auth = () => {
         {/* Product Image */}
         <div className="flex-1 flex items-center justify-center p-12">
           <div className="relative">
-            <img
-              src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=500&fit=crop"
-              alt="Featured Sneaker"
-              className="max-w-md w-full rounded-3xl shadow-2xl transform -rotate-12 hover:rotate-0 transition-transform duration-700"
-            />
+            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=500&fit=crop" alt="Featured Sneaker" className="max-w-md w-full rounded-3xl shadow-2xl transform -rotate-12 hover:rotate-0 transition-transform duration-700" />
             <div className="absolute -bottom-8 left-8 right-8 bg-black/20 backdrop-blur-xl rounded-2xl p-4">
               <p className="text-white font-semibold text-lg">Air Force 1 Low</p>
               <div className="flex gap-2 mt-2">
@@ -166,8 +163,7 @@ const Auth = () => {
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-white">
-              Best <span className="relative inline-block">
+            <h1 className="text-3xl font-bold text-white">Markety — Shop What You Want, We Handle the Delivery<span className="relative inline-block">
                 <span className="relative z-10">Sneakers</span>
                 <svg className="absolute -bottom-1 left-0 w-full h-3 text-primary" viewBox="0 0 100 12" preserveAspectRatio="none">
                   <path d="M0,6 Q25,0 50,6 T100,6" stroke="currentColor" strokeWidth="3" fill="none" />
@@ -175,86 +171,45 @@ const Auth = () => {
                 </svg>
               </span> marketplace
             </h1>
-            <p className="text-gray-400 text-sm">
-              Buy and sell the hottest sneakers including Adidas Yeezy and Retro Jordans, Supreme streetwear and more.
-            </p>
+            <p className="text-gray-400 text-sm">Welcome to Markety — your trusted marketplace to buy and sell top-quality products, from the latest Adidas Yeezy and Retro Jordan sneakers to premium Supreme streetwear and other trending items..</p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {!isLogin && (
-              <div className="space-y-2">
+            {!isLogin && <div className="space-y-2">
                 <label className="text-sm text-gray-400">Full Name</label>
-                <Input
-                  type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary"
-                />
+                <Input type="text" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary" />
                 {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
-              </div>
-            )}
+              </div>}
 
             <div className="space-y-2">
               <label className="text-sm text-gray-400">Email</label>
-              <Input
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary"
-              />
+              <Input type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary" />
               {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             </div>
 
             <div className="space-y-2">
               <label className="text-sm text-gray-400">Password</label>
               <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary pr-12"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
-                >
+                <Input type={showPassword ? "text" : "password"} placeholder="••••••••••••" value={password} onChange={e => setPassword(e.target.value)} className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary pr-12" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
               {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
             </div>
 
-            {isLogin && (
-              <div className="flex items-center justify-between">
+            {isLogin && <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <Checkbox
-                    checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(!!checked)}
-                    className="border-gray-600 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
+                  <Checkbox checked={rememberMe} onCheckedChange={checked => setRememberMe(!!checked)} className="border-gray-600 data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
                   <span className="text-sm text-gray-400">Remember me</span>
                 </label>
-                <button
-                  type="button"
-                  className="text-sm text-primary hover:text-primary/80 transition-colors"
-                >
+                <button type="button" className="text-sm text-primary hover:text-primary/80 transition-colors">
                   Forgot Password?
                 </button>
-              </div>
-            )}
+              </div>}
 
-            <Button
-              type="submit"
-              variant="success"
-              size="xl"
-              className="w-full rounded-xl"
-              disabled={loading}
-            >
+            <Button type="submit" variant="success" size="xl" className="w-full rounded-xl" disabled={loading}>
               {loading ? "Please wait..." : isLogin ? "Sign in" : "Create Account"}
             </Button>
           </form>
@@ -262,20 +217,15 @@ const Auth = () => {
           {/* Toggle Auth Mode */}
           <p className="text-center text-gray-400 text-sm">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
-            <button
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setErrors({});
-              }}
-              className="text-primary hover:text-primary/80 font-medium transition-colors"
-            >
+            <button onClick={() => {
+            setIsLogin(!isLogin);
+            setErrors({});
+          }} className="text-primary hover:text-primary/80 font-medium transition-colors">
               {isLogin ? "Create an Account" : "Sign in"}
             </button>
           </p>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Auth;
