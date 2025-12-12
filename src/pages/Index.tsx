@@ -56,13 +56,6 @@ const Index = () => {
     });
   };
 
-  const handleAddToCart = (productId: string) => {
-    const product = products.find((p) => p.id === productId);
-    toast({
-      title: "Added to cart",
-      description: `${product?.name} has been added to your cart.`,
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,7 +88,6 @@ const Index = () => {
             <ProductGrid
               products={filteredProducts}
               onFavoriteToggle={handleFavoriteToggle}
-              onAddToCart={handleAddToCart}
             />
           </div>
         </div>
