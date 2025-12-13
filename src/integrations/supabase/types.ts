@@ -20,6 +20,7 @@ export type Database = {
           id: string
           product_id: string
           quantity: number
+          selected_color: string | null
           selected_size: string | null
           updated_at: string
           user_id: string
@@ -29,6 +30,7 @@ export type Database = {
           id?: string
           product_id: string
           quantity?: number
+          selected_color?: string | null
           selected_size?: string | null
           updated_at?: string
           user_id: string
@@ -38,6 +40,7 @@ export type Database = {
           id?: string
           product_id?: string
           quantity?: number
+          selected_color?: string | null
           selected_size?: string | null
           updated_at?: string
           user_id?: string
@@ -107,6 +110,7 @@ export type Database = {
         Row: {
           brand: string
           category: string
+          colors: string[] | null
           created_at: string
           description: string | null
           id: string
@@ -125,6 +129,7 @@ export type Database = {
         Insert: {
           brand: string
           category: string
+          colors?: string[] | null
           created_at?: string
           description?: string | null
           id?: string
@@ -143,6 +148,7 @@ export type Database = {
         Update: {
           brand?: string
           category?: string
+          colors?: string[] | null
           created_at?: string
           description?: string | null
           id?: string
