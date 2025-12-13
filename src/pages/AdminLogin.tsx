@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import tharketyLogo from "@/assets/tharkety-logo.png";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -95,10 +96,8 @@ const AdminLogin = () => {
 
         {/* Admin Branding */}
         <div className="flex-1 flex flex-col items-center justify-center p-12">
-          <div className="relative">
-            <div className="w-32 h-32 rounded-3xl bg-primary/20 flex items-center justify-center mb-8 shadow-xl">
-              <Shield className="w-16 h-16 text-primary" />
-            </div>
+          <div className="relative mb-8">
+            <img src={tharketyLogo} alt="Tharkety" className="h-24 object-contain" />
           </div>
           <h2 className="text-4xl font-bold text-foreground mb-4">Admin Portal</h2>
           <p className="text-muted-foreground text-center max-w-sm">
@@ -133,9 +132,7 @@ const AdminLogin = () => {
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4 lg:hidden">
-              <Shield className="w-8 h-8 text-primary" />
-            </div>
+            <img src={tharketyLogo} alt="Tharkety" className="h-12 mx-auto mb-2 lg:hidden object-contain" />
             <h1 className="text-3xl font-bold text-foreground">Admin Login</h1>
             <p className="text-muted-foreground">
               Sign in to access the admin dashboard

@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import tharketyLogo from "@/assets/tharkety-logo.png";
 import { z } from "zod";
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -163,9 +164,7 @@ const Auth = () => {
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-[hsl(220,80%,55%)] via-[hsl(260,70%,50%)] to-[hsl(280,70%,45%)] text-3xl">
-              Tharkety
-            </h1>
+            <img src={tharketyLogo} alt="Tharkety" className="h-16 mx-auto mb-4 object-contain" />
             <p className="text-gray-500 text-sm">Your premium marketplace</p>
           </div>
 
