@@ -42,7 +42,7 @@ import { TransactionsModule } from "@/components/admin/TransactionsModule";
 import { OrderSummaryModule } from "@/components/admin/OrderSummaryModule";
 import { NotificationsModule } from "@/components/admin/NotificationsModule";
 import { supabase } from "@/integrations/supabase/client";
-import tharketyLogo from "@/assets/tharkety-logo.jpg";
+import tharketyLogo from "@/assets/tharkety-logo.png";
 
 const transactionData = [
   { name: "Jan", value: 4000 },
