@@ -198,7 +198,19 @@ export function ProductsTable() {
                       </span>
                     )}
                   </TableCell>
-                  <TableCell>{product.stock_quantity}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <span>{product.stock_quantity}</span>
+                      {product.stock_quantity < 10 && product.stock_quantity > 0 && (
+                        <Badge variant="outline" className="text-amber-600 border-amber-600">
+                          Low
+                        </Badge>
+                      )}
+                      {product.stock_quantity === 0 && (
+                        <Badge variant="destructive">Out</Badge>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
                       <Badge variant={product.in_stock ? "default" : "secondary"}>
