@@ -12,7 +12,9 @@ import {
   Bell,
   TrendingUp,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  AlertTriangle,
+  XCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +36,7 @@ import {
   Cell
 } from "recharts";
 import { ProductsTable } from "@/components/admin/ProductsTable";
+import { supabase } from "@/integrations/supabase/client";
 
 const transactionData = [
   { name: "Jan", value: 4000 },
@@ -92,6 +95,28 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [activeTimeTab, setActiveTimeTab] = useState("Month");
   const [activeSidebarTab, setActiveSidebarTab] = useState<SidebarTab>("dashboard");
+  const [lowStockCount, setLowStockCount] = useState(0);
+  const [outOfStockCount, setOutOfStockCount] = useState(0);
+
+  useEffect(() => {
+    const fetchStockCounts = async () => {
+      const { data: lowStock } = await supabase
+        .from("products")
+        .select("id", { count: "exact" })
+        .gt("stock_quantity", 0)
+        .lt("stock_quantity", 10);
+      
+      const { data: outOfStock } = await supabase
+        .from("products")
+        .select("id", { count: "exact" })
+        .eq("stock_quantity", 0);
+      
+      setLowStockCount(lowStock?.length || 0);
+      setOutOfStockCount(outOfStock?.length || 0);
+    };
+    
+    fetchStockCounts();
+  }, []);
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -302,29 +327,32 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Stats Cards */}
+            {/* Low Stock Alert Card */}
             <div className="col-span-4 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                  <Package className="h-5 w-5 text-primary" />
+                <div className="h-10 w-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                  <AlertTriangle className="h-5 w-5 text-amber-500" />
                 </div>
-                <p className="text-sm text-muted-foreground">Received Order</p>
+                <p className="text-sm text-muted-foreground">Low Stock Items</p>
               </div>
               <p className="text-3xl font-bold">
-                1400<span className="text-sm font-normal text-muted-foreground">/Pack</span>
+                {lowStockCount}<span className="text-sm font-normal text-muted-foreground"> products</span>
               </p>
+              <p className="text-xs text-amber-500 mt-2">Stock below 10 units</p>
             </div>
 
+            {/* Out of Stock Alert Card */}
             <div className="col-span-4 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-lg bg-warning/20 flex items-center justify-center">
-                  <ShoppingBag className="h-5 w-5 text-warning" />
+                <div className="h-10 w-10 rounded-lg bg-destructive/20 flex items-center justify-center">
+                  <XCircle className="h-5 w-5 text-destructive" />
                 </div>
-                <p className="text-sm text-muted-foreground">Ordering Process</p>
+                <p className="text-sm text-muted-foreground">Out of Stock</p>
               </div>
               <p className="text-3xl font-bold">
-                1202<span className="text-sm font-normal text-muted-foreground">/Pack</span>
+                {outOfStockCount}<span className="text-sm font-normal text-muted-foreground"> products</span>
               </p>
+              <p className="text-xs text-destructive mt-2">Requires immediate restock</p>
             </div>
 
             {/* Top Countries */}
