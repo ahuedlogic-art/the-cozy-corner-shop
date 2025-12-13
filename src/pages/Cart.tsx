@@ -1,14 +1,16 @@
-import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { products } from "@/data/mockData";
+import { useProducts } from "@/hooks/useProducts";
 import { Header } from "@/components/layout/Header";
 
 const Cart = () => {
-  const { cartItems, updateQuantity, removeFromCart, cartCount } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, cartCount, checkout, checkoutLoading } = useCart();
   const { user } = useAuth();
+  const { data: products = [] } = useProducts();
+  const navigate = useNavigate();
 
   const cartProducts = cartItems.map((item) => {
     const product = products.find((p) => p.id === item.product_id);
@@ -21,6 +23,13 @@ const Cart = () => {
 
   const shipping = subtotal > 100 ? 0 : 9.99;
   const total = subtotal + shipping;
+
+  const handleCheckout = async () => {
+    const success = await checkout();
+    if (success) {
+      navigate("/orders");
+    }
+  };
 
   if (!user) {
     return (
@@ -131,8 +140,20 @@ const Cart = () => {
                   </div>
                 </div>
               </div>
-              <Button variant="success" className="w-full mt-6">
-                Proceed to Checkout
+              <Button 
+                variant="success" 
+                className="w-full mt-6"
+                onClick={handleCheckout}
+                disabled={checkoutLoading}
+              >
+                {checkoutLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  "Complete Purchase"
+                )}
               </Button>
             </div>
           </div>

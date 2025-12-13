@@ -15,7 +15,9 @@ interface CartContextType {
   addToCart: (productId: string) => Promise<void>;
   removeFromCart: (productId: string) => Promise<void>;
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
+  checkout: () => Promise<boolean>;
   loading: boolean;
+  checkoutLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -23,6 +25,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -130,10 +133,101 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const checkout = async (): Promise<boolean> => {
+    if (!user || cartItems.length === 0) return false;
+
+    setCheckoutLoading(true);
+    try {
+      // Fetch product prices
+      const productIds = cartItems.map((item) => item.product_id);
+      const { data: products, error: productsError } = await supabase
+        .from("products")
+        .select("id, price, stock_quantity")
+        .in("id", productIds);
+
+      if (productsError || !products) {
+        throw new Error("Failed to fetch product data");
+      }
+
+      // Check stock availability
+      for (const item of cartItems) {
+        const product = products.find((p) => p.id === item.product_id);
+        if (!product || product.stock_quantity < item.quantity) {
+          toast({
+            title: "Insufficient stock",
+            description: `Not enough stock available for one or more items.`,
+            variant: "destructive",
+          });
+          setCheckoutLoading(false);
+          return false;
+        }
+      }
+
+      // Create orders and update stock
+      for (const item of cartItems) {
+        const product = products.find((p) => p.id === item.product_id);
+        if (!product) continue;
+
+        const totalPrice = product.price * item.quantity;
+
+        // Create order
+        const { error: orderError } = await supabase.from("orders").insert({
+          user_id: user.id,
+          product_id: item.product_id,
+          quantity: item.quantity,
+          total_price: totalPrice,
+          status: "completed",
+        });
+
+        if (orderError) {
+          console.error("Order error:", orderError);
+          throw new Error("Failed to create order");
+        }
+
+        // Deduct stock
+        const { error: stockError } = await supabase
+          .from("products")
+          .update({ stock_quantity: product.stock_quantity - item.quantity })
+          .eq("id", item.product_id);
+
+        if (stockError) {
+          console.error("Stock update error:", stockError);
+        }
+      }
+
+      // Clear cart
+      const { error: clearError } = await supabase
+        .from("cart_items")
+        .delete()
+        .eq("user_id", user.id);
+
+      if (clearError) {
+        console.error("Clear cart error:", clearError);
+      }
+
+      setCartItems([]);
+      toast({
+        title: "Order placed!",
+        description: "Your order has been successfully placed.",
+      });
+      setCheckoutLoading(false);
+      return true;
+    } catch (error) {
+      console.error("Checkout error:", error);
+      toast({
+        title: "Checkout failed",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+      setCheckoutLoading(false);
+      return false;
+    }
+  };
+
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cartItems, cartCount, addToCart, removeFromCart, updateQuantity, loading }}>
+    <CartContext.Provider value={{ cartItems, cartCount, addToCart, removeFromCart, updateQuantity, checkout, loading, checkoutLoading }}>
       {children}
     </CartContext.Provider>
   );
