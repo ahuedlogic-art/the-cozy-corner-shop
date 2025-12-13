@@ -12,7 +12,6 @@ import {
   Bell,
   TrendingUp,
   ArrowUpRight,
-  ArrowDownRight,
   AlertTriangle,
   XCircle
 } from "lucide-react";
@@ -37,6 +36,10 @@ import {
   Cell
 } from "recharts";
 import { ProductsTable } from "@/components/admin/ProductsTable";
+import { AdminProfile } from "@/components/admin/AdminProfile";
+import { AdminSettings } from "@/components/admin/AdminSettings";
+import { TransactionsModule } from "@/components/admin/TransactionsModule";
+import { OrderSummaryModule } from "@/components/admin/OrderSummaryModule";
 import { supabase } from "@/integrations/supabase/client";
 
 const transactionData = [
@@ -76,7 +79,7 @@ const topCountries = [
   { name: "Canada", percentage: 30 },
 ];
 
-type SidebarTab = "dashboard" | "products" | "orders" | "transactions" | "messages";
+type SidebarTab = "dashboard" | "products" | "orders" | "transactions" | "messages" | "account" | "settings";
 
 const sidebarItems: { icon: typeof LayoutDashboard; label: string; tab: SidebarTab }[] = [
   { icon: LayoutDashboard, label: "Dashboard", tab: "dashboard" },
@@ -86,9 +89,9 @@ const sidebarItems: { icon: typeof LayoutDashboard; label: string; tab: SidebarT
   { icon: ShoppingBag, label: "Products", tab: "products" },
 ];
 
-const supportItems = [
-  { icon: Users, label: "Account" },
-  { icon: Settings, label: "Settings" },
+const supportItems: { icon: typeof Users; label: string; tab: SidebarTab }[] = [
+  { icon: Users, label: "Account", tab: "account" },
+  { icon: Settings, label: "Settings", tab: "settings" },
 ];
 
 const Dashboard = () => {
@@ -182,7 +185,12 @@ const Dashboard = () => {
             {supportItems.map((item) => (
               <li key={item.label}>
                 <button
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                  onClick={() => setActiveSidebarTab(item.tab)}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                    activeSidebarTab === item.tab 
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
                 >
                   <item.icon className="h-5 w-5" />
                   <span className="text-sm font-medium">{item.label}</span>
@@ -216,7 +224,7 @@ const Dashboard = () => {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
-          <h1 className="text-xl font-semibold">Dashboard</h1>
+          <h1 className="text-xl font-semibold capitalize">{activeSidebarTab === "dashboard" ? "Dashboard" : activeSidebarTab.replace("-", " ")}</h1>
           <div className="flex items-center gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -242,9 +250,12 @@ const Dashboard = () => {
 
         {/* Dashboard Content */}
         <main className="flex-1 p-6 overflow-auto">
-          {activeSidebarTab === "products" ? (
-            <ProductsTable />
-          ) : (
+          {activeSidebarTab === "products" && <ProductsTable />}
+          {activeSidebarTab === "account" && <AdminProfile />}
+          {activeSidebarTab === "settings" && <AdminSettings />}
+          {activeSidebarTab === "transactions" && <TransactionsModule />}
+          {activeSidebarTab === "orders" && <OrderSummaryModule />}
+          {activeSidebarTab === "dashboard" && (
           <div className="grid grid-cols-12 gap-6">
             {/* Transaction Activity Chart */}
             <div className="col-span-8 bg-card rounded-2xl p-6 shadow-card border border-border">
