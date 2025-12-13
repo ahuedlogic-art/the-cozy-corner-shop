@@ -29,6 +29,7 @@ const productSchema = z.object({
   image: z.string().optional().or(z.literal("")),
   category: z.string().min(1, "Category is required"),
   brand: z.string().min(1, "Brand is required"),
+  stock_quantity: z.coerce.number().int().min(0, "Quantity must be 0 or more"),
   is_top_item: z.boolean().default(false),
   in_stock: z.boolean().default(true),
 });
@@ -60,6 +61,7 @@ export function ProductForm({
       image: "",
       category: "",
       brand: "",
+      stock_quantity: 0,
       is_top_item: false,
       in_stock: true,
       ...defaultValues,
@@ -175,6 +177,19 @@ export function ProductForm({
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="stock_quantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock Quantity</FormLabel>
+                  <FormControl>
+                    <Input type="number" min="0" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="flex gap-6">
               <FormField
                 control={form.control}
