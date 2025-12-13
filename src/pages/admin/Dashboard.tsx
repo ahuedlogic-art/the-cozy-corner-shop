@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   LayoutDashboard, 
   Package, 
@@ -33,6 +33,7 @@ import {
   Pie,
   Cell
 } from "recharts";
+import { ProductsTable } from "@/components/admin/ProductsTable";
 
 const transactionData = [
   { name: "Jan", value: 4000 },
@@ -71,28 +72,49 @@ const topCountries = [
   { name: "Canada", percentage: 30 },
 ];
 
-const sidebarItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
-  { icon: Package, label: "Order Summary", active: false },
-  { icon: CreditCard, label: "Transaction", active: false },
-  { icon: MessageSquare, label: "Messages", active: false },
-  { icon: ShoppingBag, label: "Product", active: false },
+type SidebarTab = "dashboard" | "products" | "orders" | "transactions" | "messages";
+
+const sidebarItems: { icon: typeof LayoutDashboard; label: string; tab: SidebarTab }[] = [
+  { icon: LayoutDashboard, label: "Dashboard", tab: "dashboard" },
+  { icon: Package, label: "Order Summary", tab: "orders" },
+  { icon: CreditCard, label: "Transaction", tab: "transactions" },
+  { icon: MessageSquare, label: "Messages", tab: "messages" },
+  { icon: ShoppingBag, label: "Products", tab: "products" },
 ];
 
 const supportItems = [
-  { icon: Users, label: "Account", active: false },
-  { icon: Settings, label: "Settings", active: false },
+  { icon: Users, label: "Account" },
+  { icon: Settings, label: "Settings" },
 ];
 
 const Dashboard = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("Month");
+  const [activeTimeTab, setActiveTimeTab] = useState("Month");
+  const [activeSidebarTab, setActiveSidebarTab] = useState<SidebarTab>("dashboard");
+
+  useEffect(() => {
+    if (!loading && !isAdmin) {
+      navigate("/");
+    }
+  }, [isAdmin, loading, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[hsl(220,20%,10%)] flex items-center justify-center text-foreground">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-[hsl(220,20%,10%)] text-foreground flex">
@@ -115,8 +137,9 @@ const Dashboard = () => {
             {sidebarItems.map((item) => (
               <li key={item.label}>
                 <button
+                  onClick={() => setActiveSidebarTab(item.tab)}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                    item.active 
+                    activeSidebarTab === item.tab 
                       ? "bg-success text-success-foreground" 
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
@@ -192,6 +215,9 @@ const Dashboard = () => {
 
         {/* Dashboard Content */}
         <main className="flex-1 p-6 overflow-auto">
+          {activeSidebarTab === "products" ? (
+            <ProductsTable />
+          ) : (
           <div className="grid grid-cols-12 gap-6">
             {/* Transaction Activity Chart */}
             <div className="col-span-8 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
@@ -214,9 +240,9 @@ const Dashboard = () => {
                   {["Day", "Week", "Month", "Year"].map((tab) => (
                     <button
                       key={tab}
-                      onClick={() => setActiveTab(tab)}
+                      onClick={() => setActiveTimeTab(tab)}
                       className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                        activeTab === tab
+                        activeTimeTab === tab
                           ? "bg-success text-success-foreground"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
@@ -388,6 +414,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+          )}
         </main>
       </div>
     </div>
