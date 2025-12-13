@@ -38,6 +38,7 @@ interface Product {
   is_top_item: boolean | null;
   in_stock: boolean | null;
   stock_quantity: number;
+  sizes: string[] | null;
   created_at: string;
 }
 
@@ -76,6 +77,7 @@ export function ProductsTable() {
       image: data.image || null,
       category: data.category,
       brand: data.brand,
+      sizes: data.sizes || [],
       stock_quantity: data.stock_quantity,
       is_top_item: data.is_top_item,
       in_stock: data.in_stock,
@@ -103,6 +105,7 @@ export function ProductsTable() {
         image: data.image || null,
         category: data.category,
         brand: data.brand,
+        sizes: data.sizes || [],
         stock_quantity: data.stock_quantity,
         is_top_item: data.is_top_item,
         in_stock: data.in_stock,
@@ -261,6 +264,7 @@ export function ProductsTable() {
                 image: editingProduct.image || "",
                 category: editingProduct.category,
                 brand: editingProduct.brand,
+                sizes: editingProduct.sizes || [],
                 stock_quantity: editingProduct.stock_quantity,
                 is_top_item: editingProduct.is_top_item || false,
                 in_stock: editingProduct.in_stock ?? true,

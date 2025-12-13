@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/dialog";
 import { ImageUpload } from "./ImageUpload";
 
+const AVAILABLE_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45"];
+
 const productSchema = z.object({
   name: z.string().min(1, "Name is required").max(200),
   description: z.string().max(1000).optional(),
@@ -29,6 +31,7 @@ const productSchema = z.object({
   image: z.string().optional().or(z.literal("")),
   category: z.string().min(1, "Category is required"),
   brand: z.string().min(1, "Brand is required"),
+  sizes: z.array(z.string()).default([]),
   stock_quantity: z.coerce.number().int().min(0, "Quantity must be 0 or more"),
   is_top_item: z.boolean().default(false),
   in_stock: z.boolean().default(true),
@@ -61,6 +64,7 @@ export function ProductForm({
       image: "",
       category: "",
       brand: "",
+      sizes: [],
       stock_quantity: 0,
       is_top_item: false,
       in_stock: true,
@@ -186,6 +190,35 @@ export function ProductForm({
                   <FormControl>
                     <Input type="number" min="0" placeholder="0" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="sizes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Available Sizes (for fashion/footwear)</FormLabel>
+                  <div className="flex flex-wrap gap-2">
+                    {AVAILABLE_SIZES.map((size) => (
+                      <Button
+                        key={size}
+                        type="button"
+                        variant={field.value?.includes(size) ? "default" : "outline"}
+                        size="sm"
+                        className="h-8 w-10"
+                        onClick={() => {
+                          const newSizes = field.value?.includes(size)
+                            ? field.value.filter((s) => s !== size)
+                            : [...(field.value || []), size];
+                          field.onChange(newSizes);
+                        }}
+                      >
+                        {size}
+                      </Button>
+                    ))}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
