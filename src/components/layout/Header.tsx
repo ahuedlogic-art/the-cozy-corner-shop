@@ -45,10 +45,12 @@ export const Header = () => {
 
         {/* Navigation Icons */}
         <nav className="flex items-center gap-1">
-          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-            <Package className="h-4 w-4" />
-            <span className="hidden md:inline">Orders</span>
-          </Button>
+          <Link to="/orders">
+            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+              <Package className="h-4 w-4" />
+              <span className="hidden md:inline">Orders</span>
+            </Button>
+          </Link>
           <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
             <Heart className="h-4 w-4" />
             <span className="hidden md:inline">Favourites</span>
