@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean | null
+          message: string
+          order_id: string | null
+          product_id: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message: string
+          order_id?: string | null
+          product_id?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          order_id?: string | null
+          product_id?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_notifications_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_notifications_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cart_items: {
         Row: {
           created_at: string
@@ -72,8 +120,15 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          order_notes: string | null
+          payment_method: string | null
           product_id: string
           quantity: number
+          shipping_address: string | null
+          shipping_city: string | null
+          shipping_country: string | null
+          shipping_phone: string | null
+          shipping_postal_code: string | null
           status: string
           total_price: number
           user_id: string
@@ -81,8 +136,15 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          order_notes?: string | null
+          payment_method?: string | null
           product_id: string
           quantity?: number
+          shipping_address?: string | null
+          shipping_city?: string | null
+          shipping_country?: string | null
+          shipping_phone?: string | null
+          shipping_postal_code?: string | null
           status?: string
           total_price: number
           user_id: string
@@ -90,8 +152,15 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          order_notes?: string | null
+          payment_method?: string | null
           product_id?: string
           quantity?: number
+          shipping_address?: string | null
+          shipping_city?: string | null
+          shipping_country?: string | null
+          shipping_phone?: string | null
+          shipping_postal_code?: string | null
           status?: string
           total_price?: number
           user_id?: string

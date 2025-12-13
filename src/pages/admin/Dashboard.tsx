@@ -40,7 +40,9 @@ import { AdminProfile } from "@/components/admin/AdminProfile";
 import { AdminSettings } from "@/components/admin/AdminSettings";
 import { TransactionsModule } from "@/components/admin/TransactionsModule";
 import { OrderSummaryModule } from "@/components/admin/OrderSummaryModule";
+import { NotificationsModule } from "@/components/admin/NotificationsModule";
 import { supabase } from "@/integrations/supabase/client";
+import tharketyLogo from "@/assets/tharkety-logo.jpg";
 
 const transactionData = [
   { name: "Jan", value: 4000 },
@@ -79,10 +81,11 @@ const topCountries = [
   { name: "Canada", percentage: 30 },
 ];
 
-type SidebarTab = "dashboard" | "products" | "orders" | "transactions" | "messages" | "account" | "settings";
+type SidebarTab = "dashboard" | "products" | "orders" | "transactions" | "notifications" | "messages" | "account" | "settings";
 
 const sidebarItems: { icon: typeof LayoutDashboard; label: string; tab: SidebarTab }[] = [
   { icon: LayoutDashboard, label: "Dashboard", tab: "dashboard" },
+  { icon: Bell, label: "Notifications", tab: "notifications" },
   { icon: Package, label: "Order Summary", tab: "orders" },
   { icon: CreditCard, label: "Transaction", tab: "transactions" },
   { icon: MessageSquare, label: "Messages", tab: "messages" },
@@ -152,10 +155,7 @@ const Dashboard = () => {
         {/* Logo */}
         <div className="p-6">
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">M</span>
-            </div>
-            <span className="font-bold text-xl tracking-tight">MLC Store</span>
+            <img src={tharketyLogo} alt="Tharkety" className="h-10 object-contain" />
           </Link>
         </div>
 
@@ -255,6 +255,7 @@ const Dashboard = () => {
           {activeSidebarTab === "settings" && <AdminSettings />}
           {activeSidebarTab === "transactions" && <TransactionsModule />}
           {activeSidebarTab === "orders" && <OrderSummaryModule />}
+          {activeSidebarTab === "notifications" && <NotificationsModule />}
           {activeSidebarTab === "dashboard" && (
           <div className="grid grid-cols-12 gap-6">
             {/* Transaction Activity Chart */}
