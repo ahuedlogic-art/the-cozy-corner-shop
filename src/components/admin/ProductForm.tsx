@@ -19,13 +19,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ImageUpload } from "./ImageUpload";
 
 const productSchema = z.object({
   name: z.string().min(1, "Name is required").max(200),
   description: z.string().max(1000).optional(),
   price: z.coerce.number().positive("Price must be positive"),
   original_price: z.coerce.number().positive().optional().or(z.literal("")),
-  image: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  image: z.string().optional().or(z.literal("")),
   category: z.string().min(1, "Category is required"),
   brand: z.string().min(1, "Brand is required"),
   is_top_item: z.boolean().default(false),
@@ -138,9 +139,9 @@ export function ProductForm({
               name="image"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image URL</FormLabel>
+                  <FormLabel>Product Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/image.jpg" {...field} />
+                    <ImageUpload value={field.value} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
