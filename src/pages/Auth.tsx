@@ -131,10 +131,10 @@ const Auth = () => {
       setLoading(false);
     }
   };
-  return <div className="min-h-screen flex dark">
+  return <div className="min-h-screen flex">
       {/* Left Panel - Product Showcase */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[hsl(260,60%,20%)] to-[hsl(220,60%,15%)]">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[hsl(220,80%,55%)] via-[hsl(260,70%,50%)] to-[hsl(280,70%,45%)]">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         
         {/* Back Button */}
         <Link to="/" className="absolute top-6 left-6 z-10 flex items-center gap-2 text-white/80 hover:text-white transition-colors">
@@ -146,7 +146,7 @@ const Auth = () => {
         <div className="flex-1 flex items-center justify-center p-12">
           <div className="relative">
             <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&h=500&fit=crop" alt="Featured Sneaker" className="max-w-md w-full rounded-3xl shadow-2xl transform -rotate-12 hover:rotate-0 transition-transform duration-700" />
-            <div className="absolute -bottom-8 left-8 right-8 bg-black/20 backdrop-blur-xl rounded-2xl p-4">
+            <div className="absolute -bottom-8 left-8 right-8 bg-white/10 backdrop-blur-xl rounded-2xl p-4 border border-white/20">
               <p className="text-white font-semibold text-lg">Air Force 1 Low</p>
               <div className="flex gap-2 mt-2">
                 <span className="w-2 h-2 rounded-full bg-white" />
@@ -159,41 +159,35 @@ const Auth = () => {
       </div>
 
       {/* Right Panel - Auth Form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-[hsl(220,30%,12%)]">
+      <div className="flex-1 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="font-bold text-white font-serif text-3xl">MARKETY
- <span className="relative inline-block">
-                <span className="relative z-10">MARKETY</span>
-                <svg className="absolute -bottom-1 left-0 w-full h-3 text-primary" viewBox="0 0 100 12" preserveAspectRatio="none">
-                  <path d="M0,6 Q25,0 50,6 T100,6" stroke="currentColor" strokeWidth="3" fill="none" />
-                  <path d="M0,6 Q25,12 50,6 T100,6" stroke="currentColor" strokeWidth="3" fill="none" />
-                </svg>
-              </span> marketplace
+            <h1 className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-[hsl(220,80%,55%)] via-[hsl(260,70%,50%)] to-[hsl(280,70%,45%)] text-3xl">
+              Tharkety
             </h1>
-            
+            <p className="text-gray-500 text-sm">Your premium marketplace</p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && <div className="space-y-2">
-                <label className="text-sm text-gray-400">Full Name</label>
-                <Input type="text" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary" />
+                <label className="text-sm text-gray-600 font-medium">Full Name</label>
+                <Input type="text" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} className="h-12 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-[hsl(260,70%,50%)] focus-visible:border-[hsl(260,70%,50%)]" />
                 {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
               </div>}
 
             <div className="space-y-2">
-              <label className="text-sm text-gray-400">Email</label>
-              <Input type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary" />
+              <label className="text-sm text-gray-600 font-medium">Email</label>
+              <Input type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} className="h-12 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-[hsl(260,70%,50%)] focus-visible:border-[hsl(260,70%,50%)]" />
               {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-gray-400">Password</label>
+              <label className="text-sm text-gray-600 font-medium">Password</label>
               <div className="relative">
-                <Input type={showPassword ? "text" : "password"} placeholder="••••••••••••" value={password} onChange={e => setPassword(e.target.value)} className="h-12 bg-[hsl(220,30%,18%)] border-[hsl(220,30%,25%)] text-white placeholder:text-gray-500 focus-visible:ring-primary pr-12" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
+                <Input type={showPassword ? "text" : "password"} placeholder="••••••••••••" value={password} onChange={e => setPassword(e.target.value)} className="h-12 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-[hsl(260,70%,50%)] focus-visible:border-[hsl(260,70%,50%)] pr-12" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
@@ -202,26 +196,26 @@ const Auth = () => {
 
             {isLogin && <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <Checkbox checked={rememberMe} onCheckedChange={checked => setRememberMe(!!checked)} className="border-gray-600 data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
-                  <span className="text-sm text-gray-400">Remember me</span>
+                  <Checkbox checked={rememberMe} onCheckedChange={checked => setRememberMe(!!checked)} className="border-gray-300 data-[state=checked]:bg-[hsl(260,70%,50%)] data-[state=checked]:border-[hsl(260,70%,50%)]" />
+                  <span className="text-sm text-gray-600">Remember me</span>
                 </label>
-                <button type="button" className="text-sm text-primary hover:text-primary/80 transition-colors">
+                <button type="button" className="text-sm text-[hsl(260,70%,50%)] hover:text-[hsl(260,70%,40%)] transition-colors font-medium">
                   Forgot Password?
                 </button>
               </div>}
 
-            <Button type="submit" variant="success" size="xl" className="w-full rounded-xl" disabled={loading}>
+            <Button type="submit" size="xl" className="w-full rounded-xl bg-gradient-to-r from-[hsl(220,80%,55%)] via-[hsl(260,70%,50%)] to-[hsl(280,70%,45%)] hover:opacity-90 text-white border-0" disabled={loading}>
               {loading ? "Please wait..." : isLogin ? "Sign in" : "Create Account"}
             </Button>
           </form>
 
           {/* Toggle Auth Mode */}
-          <p className="text-center text-gray-400 text-sm">
+          <p className="text-center text-gray-500 text-sm">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <button onClick={() => {
             setIsLogin(!isLogin);
             setErrors({});
-          }} className="text-primary hover:text-primary/80 font-medium transition-colors">
+          }} className="text-[hsl(260,70%,50%)] hover:text-[hsl(260,70%,40%)] font-medium transition-colors">
               {isLogin ? "Create an Account" : "Sign in"}
             </button>
           </p>
