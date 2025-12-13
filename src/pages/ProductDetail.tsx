@@ -12,8 +12,6 @@ import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
 import { ProductReviews } from "@/components/reviews/ProductReviews";
 
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
-
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -37,8 +35,11 @@ const ProductDetail = () => {
     enabled: !!id,
   });
 
-  const handleAddToCart = () => {
-    if (product?.category === "fashion" && !selectedSize) {
+  const productSizes = product?.sizes || [];
+  const hasSizes = productSizes.length > 0;
+
+  const handleAddToCart = async () => {
+    if (hasSizes && !selectedSize) {
       toast({
         title: "Please select a size",
         description: "You must select a size before adding to cart.",
@@ -48,7 +49,7 @@ const ProductDetail = () => {
     }
     
     for (let i = 0; i < quantity; i++) {
-      addToCart(product!.id);
+      await addToCart(product!.id, selectedSize || undefined);
     }
     
     toast({
@@ -89,8 +90,6 @@ const ProductDetail = () => {
       </div>
     );
   }
-
-  const isFashion = product.category === "fashion";
 
   return (
     <div className="min-h-screen bg-background">
@@ -186,12 +185,12 @@ const ProductDetail = () => {
               </p>
             </div>
 
-            {/* Size Selection for Fashion */}
-            {isFashion && (
+            {/* Size Selection */}
+            {hasSizes && (
               <div>
                 <h3 className="font-semibold text-foreground mb-3">Select Size</h3>
                 <div className="flex flex-wrap gap-2">
-                  {SIZES.map((size) => (
+                  {productSizes.map((size) => (
                     <Button
                       key={size}
                       variant={selectedSize === size ? "default" : "outline"}

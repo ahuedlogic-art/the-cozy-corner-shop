@@ -20,6 +20,7 @@ export type Database = {
           id: string
           product_id: string
           quantity: number
+          selected_size: string | null
           updated_at: string
           user_id: string
         }
@@ -28,6 +29,7 @@ export type Database = {
           id?: string
           product_id: string
           quantity?: number
+          selected_size?: string | null
           updated_at?: string
           user_id: string
         }
@@ -36,6 +38,7 @@ export type Database = {
           id?: string
           product_id?: string
           quantity?: number
+          selected_size?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -115,6 +118,7 @@ export type Database = {
           price: number
           rating: number | null
           review_count: number | null
+          sizes: string[] | null
           stock_quantity: number
           updated_at: string
         }
@@ -132,6 +136,7 @@ export type Database = {
           price: number
           rating?: number | null
           review_count?: number | null
+          sizes?: string[] | null
           stock_quantity?: number
           updated_at?: string
         }
@@ -149,6 +154,7 @@ export type Database = {
           price?: number
           rating?: number | null
           review_count?: number | null
+          sizes?: string[] | null
           stock_quantity?: number
           updated_at?: string
         }
