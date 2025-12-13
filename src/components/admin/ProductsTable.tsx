@@ -37,6 +37,7 @@ interface Product {
   review_count: number | null;
   is_top_item: boolean | null;
   in_stock: boolean | null;
+  stock_quantity: number;
   created_at: string;
 }
 
@@ -75,6 +76,7 @@ export function ProductsTable() {
       image: data.image || null,
       category: data.category,
       brand: data.brand,
+      stock_quantity: data.stock_quantity,
       is_top_item: data.is_top_item,
       in_stock: data.in_stock,
     });
@@ -101,6 +103,7 @@ export function ProductsTable() {
         image: data.image || null,
         category: data.category,
         brand: data.brand,
+        stock_quantity: data.stock_quantity,
         is_top_item: data.is_top_item,
         in_stock: data.in_stock,
       })
@@ -158,6 +161,7 @@ export function ProductsTable() {
               <TableHead>Category</TableHead>
               <TableHead>Brand</TableHead>
               <TableHead>Price</TableHead>
+              <TableHead>Stock</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -165,7 +169,7 @@ export function ProductsTable() {
           <TableBody>
             {products.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center text-muted-foreground">
+                <TableCell colSpan={8} className="text-center text-muted-foreground">
                   No products found. Add your first product!
                 </TableCell>
               </TableRow>
@@ -194,6 +198,7 @@ export function ProductsTable() {
                       </span>
                     )}
                   </TableCell>
+                  <TableCell>{product.stock_quantity}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
                       <Badge variant={product.in_stock ? "default" : "secondary"}>
@@ -244,6 +249,7 @@ export function ProductsTable() {
                 image: editingProduct.image || "",
                 category: editingProduct.category,
                 brand: editingProduct.brand,
+                stock_quantity: editingProduct.stock_quantity,
                 is_top_item: editingProduct.is_top_item || false,
                 in_stock: editingProduct.in_stock ?? true,
               }

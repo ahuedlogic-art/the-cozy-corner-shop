@@ -115,6 +115,7 @@ export type Database = {
           price: number
           rating: number | null
           review_count: number | null
+          stock_quantity: number
           updated_at: string
         }
         Insert: {
@@ -131,6 +132,7 @@ export type Database = {
           price: number
           rating?: number | null
           review_count?: number | null
+          stock_quantity?: number
           updated_at?: string
         }
         Update: {
@@ -147,6 +149,7 @@ export type Database = {
           price?: number
           rating?: number | null
           review_count?: number | null
+          stock_quantity?: number
           updated_at?: string
         }
         Relationships: []
