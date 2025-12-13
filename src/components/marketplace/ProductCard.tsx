@@ -4,6 +4,7 @@ import { Product } from "@/types/product";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   product: Product;
@@ -17,14 +18,24 @@ export const ProductCard = ({
   const [isFavorite, setIsFavorite] = useState(product.isFavorite);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsFavorite(!isFavorite);
     onFavoriteToggle?.(product.id);
   };
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart(product.id);
+  };
+
   return (
-    <article className="group relative bg-card rounded-2xl border border-border overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 animate-fade-in">
+    <article 
+      className="group relative bg-card rounded-2xl border border-border overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 animate-fade-in cursor-pointer"
+      onClick={() => navigate(`/product/${product.id}`)}
+    >
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-muted">
         {!isImageLoaded && (
@@ -64,6 +75,7 @@ export const ProductCard = ({
             isFavorite && "opacity-100"
           )}
           onClick={handleFavoriteClick}
+          aria-label="Add to favorites"
         >
           <Heart
             className={cn("h-4 w-4", isFavorite && "fill-current")}
@@ -101,7 +113,7 @@ export const ProductCard = ({
             variant="price"
             size="sm"
             className="gap-2 rounded-full"
-            onClick={() => addToCart(product.id)}
+            onClick={handleAddToCart}
           >
             <ShoppingCart className="h-3.5 w-3.5" />
             <span>${product.price.toFixed(2)}</span>
