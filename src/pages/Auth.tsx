@@ -164,7 +164,7 @@ const Auth = () => {
           {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="font-bold text-white font-serif text-3xl">MARKETY
- marketplace<span className="relative inline-block">
+ <span className="relative inline-block">
                 <span className="relative z-10">MARKETY</span>
                 <svg className="absolute -bottom-1 left-0 w-full h-3 text-primary" viewBox="0 0 100 12" preserveAspectRatio="none">
                   <path d="M0,6 Q25,0 50,6 T100,6" stroke="currentColor" strokeWidth="3" fill="none" />
@@ -172,7 +172,7 @@ const Auth = () => {
                 </svg>
               </span> marketplace
             </h1>
-            <p className="text-gray-400 text-sm">Welcome to Markety — your trusted marketplace to buy and sell top-quality products, from the latest Adidas Yeezy and Retro Jordan sneakers to premium Supreme streetwear and other trending items..</p>
+            
           </div>
 
           {/* Form */}
