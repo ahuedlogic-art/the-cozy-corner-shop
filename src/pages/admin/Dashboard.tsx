@@ -61,9 +61,9 @@ const visitorData = [
 ];
 
 const pieData = [
-  { name: "Sneakers", value: 58, color: "hsl(var(--success))" },
-  { name: "Apparel", value: 24, color: "hsl(var(--warning))" },
-  { name: "Accessories", value: 11, color: "hsl(var(--primary))" },
+  { name: "Sneakers", value: 58, color: "hsl(262 83% 58%)" },
+  { name: "Apparel", value: 24, color: "hsl(280 83% 65%)" },
+  { name: "Accessories", value: 11, color: "hsl(262 83% 75%)" },
   { name: "Other", value: 7, color: "hsl(var(--muted))" },
 ];
 
@@ -131,7 +131,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[hsl(220,20%,10%)] flex items-center justify-center text-foreground">
+      <div className="min-h-screen bg-background flex items-center justify-center text-foreground">
         Loading...
       </div>
     );
@@ -142,14 +142,14 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[hsl(220,20%,10%)] text-foreground flex">
+    <div className="min-h-screen bg-background text-foreground flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-[hsl(220,25%,12%)] border-r border-border/50 flex flex-col">
+      <aside className="w-64 bg-card border-r border-border flex flex-col">
         {/* Logo */}
         <div className="p-6">
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-success flex items-center justify-center">
-              <span className="text-success-foreground font-bold text-lg">M</span>
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-lg">M</span>
             </div>
             <span className="font-bold text-xl tracking-tight">MLC Store</span>
           </Link>
@@ -165,7 +165,7 @@ const Dashboard = () => {
                   onClick={() => setActiveSidebarTab(item.tab)}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                     activeSidebarTab === item.tab 
-                      ? "bg-success text-success-foreground" 
+                      ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
                 >
@@ -202,9 +202,9 @@ const Dashboard = () => {
 
         {/* Pro Card */}
         <div className="p-4">
-          <div className="bg-success/10 rounded-2xl p-4">
-            <p className="text-sm font-medium text-success mb-1">Get more complete access and analysis</p>
-            <Button variant="success" size="sm" className="w-full mt-3">
+          <div className="bg-primary/10 rounded-2xl p-4">
+            <p className="text-sm font-medium text-primary mb-1">Get more complete access and analysis</p>
+            <Button size="sm" className="w-full mt-3">
               Go Pro Now!
             </Button>
           </div>
@@ -214,7 +214,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="h-16 border-b border-border/50 flex items-center justify-between px-6">
+        <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
           <h1 className="text-xl font-semibold">Dashboard</h1>
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -229,7 +229,7 @@ const Dashboard = () => {
               <Bell className="h-5 w-5" />
               <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-destructive" />
             </Button>
-            <Avatar className="h-9 w-9">
+            <Avatar className="h-9 w-9 border-2 border-primary/20">
               <AvatarImage src="" />
               <AvatarFallback className="bg-warning text-warning-foreground">
                 {user?.email?.charAt(0).toUpperCase() || "A"}
@@ -245,17 +245,17 @@ const Dashboard = () => {
           ) : (
           <div className="grid grid-cols-12 gap-6">
             {/* Transaction Activity Chart */}
-            <div className="col-span-8 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
+            <div className="col-span-8 bg-card rounded-2xl p-6 shadow-card border border-border">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-success/20 flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-success" />
+                  <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Transaction activity</p>
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-bold">$90,984</span>
-                      <span className="text-sm text-success flex items-center">
+                      <span className="text-sm text-primary flex items-center">
                         15.90% <ArrowUpRight className="h-3 w-3" />
                       </span>
                     </div>
@@ -268,7 +268,7 @@ const Dashboard = () => {
                       onClick={() => setActiveTimeTab(tab)}
                       className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                         activeTimeTab === tab
-                          ? "bg-success text-success-foreground"
+                          ? "bg-primary text-primary-foreground"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
@@ -285,15 +285,15 @@ const Dashboard = () => {
                     <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: "hsl(220,25%,18%)", 
-                        border: "none", 
+                        backgroundColor: "hsl(var(--card))", 
+                        border: "1px solid hsl(var(--border))", 
                         borderRadius: "8px" 
                       }} 
                     />
                     <Line 
                       type="monotone" 
                       dataKey="value" 
-                      stroke="hsl(var(--warning))" 
+                      stroke="hsl(var(--primary))" 
                       strokeWidth={2}
                       dot={false}
                     />
@@ -303,19 +303,19 @@ const Dashboard = () => {
             </div>
 
             {/* Balance Card */}
-            <div className="col-span-4 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
+            <div className="col-span-4 bg-card rounded-2xl p-6 shadow-card border border-border">
               <p className="text-sm text-muted-foreground mb-1">Balance</p>
               <p className="text-3xl font-bold mb-6">$ 2,345.90</p>
               
               <div className="mb-6">
                 <p className="text-sm text-muted-foreground mb-2">Pay with</p>
                 <div className="flex items-center gap-3 bg-muted/30 rounded-lg p-3">
-                  <div className="h-8 w-8 rounded-full bg-warning" />
+                  <div className="h-8 w-8 rounded-full bg-primary" />
                   <span className="text-sm">Card 907636 ********</span>
                 </div>
               </div>
 
-              <Button variant="success" className="w-full">
+              <Button className="w-full">
                 Withdraw Money
               </Button>
 
@@ -328,7 +328,7 @@ const Dashboard = () => {
             </div>
 
             {/* Low Stock Alert Card */}
-            <div className="col-span-4 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
+            <div className="col-span-4 bg-card rounded-2xl p-6 shadow-card border border-border">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-10 w-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
                   <AlertTriangle className="h-5 w-5 text-amber-500" />
@@ -342,7 +342,7 @@ const Dashboard = () => {
             </div>
 
             {/* Out of Stock Alert Card */}
-            <div className="col-span-4 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
+            <div className="col-span-4 bg-card rounded-2xl p-6 shadow-card border border-border">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-10 w-10 rounded-lg bg-destructive/20 flex items-center justify-center">
                   <XCircle className="h-5 w-5 text-destructive" />
@@ -356,7 +356,7 @@ const Dashboard = () => {
             </div>
 
             {/* Top Countries */}
-            <div className="col-span-4 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
+            <div className="col-span-4 bg-card rounded-2xl p-6 shadow-card border border-border">
               <p className="text-sm font-medium mb-4">Top Country</p>
               <div className="space-y-3">
                 {topCountries.map((country) => (
@@ -364,7 +364,7 @@ const Dashboard = () => {
                     <span className="text-xs text-muted-foreground w-24 truncate">{country.name}</span>
                     <div className="flex-1 h-2 bg-muted/30 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-warning rounded-full"
+                        className="h-full bg-primary rounded-full"
                         style={{ width: `${country.percentage}%` }}
                       />
                     </div>
@@ -374,7 +374,7 @@ const Dashboard = () => {
             </div>
 
             {/* Average Sales with Pie Chart */}
-            <div className="col-span-4 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
+            <div className="col-span-4 bg-card rounded-2xl p-6 shadow-card border border-border">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-sm text-muted-foreground">Average sales</p>
                 <select className="text-xs bg-muted/50 border-0 rounded px-2 py-1">
@@ -411,7 +411,7 @@ const Dashboard = () => {
             </div>
 
             {/* Average Visitor Bar Chart */}
-            <div className="col-span-4 bg-[hsl(220,25%,14%)] rounded-2xl p-6">
+            <div className="col-span-4 bg-card rounded-2xl p-6 shadow-card border border-border">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-sm text-muted-foreground">Average visitor</p>
                 <select className="text-xs bg-muted/50 border-0 rounded px-2 py-1">
@@ -422,14 +422,14 @@ const Dashboard = () => {
               <div className="h-32">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={visitorData}>
-                    <Bar dataKey="current" fill="hsl(var(--warning))" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="current" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                     <Bar dataKey="lastMonth" fill="hsl(var(--muted))" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
               <div className="flex items-center gap-4 mt-2 text-xs">
                 <div className="flex items-center gap-1">
-                  <div className="h-2 w-2 rounded-full bg-warning" />
+                  <div className="h-2 w-2 rounded-full bg-primary" />
                   <span className="text-muted-foreground">Current</span>
                 </div>
                 <div className="flex items-center gap-1">
