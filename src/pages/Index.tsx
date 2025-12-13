@@ -3,9 +3,11 @@ import { Header } from "@/components/layout/Header";
 import { CategoryChips } from "@/components/marketplace/CategoryChips";
 import { FilterSidebar } from "@/components/marketplace/FilterSidebar";
 import { ProductGrid } from "@/components/marketplace/ProductGrid";
-import { categories, brands, products } from "@/data/mockData";
+import { categories } from "@/data/mockData";
 import { FilterState } from "@/types/product";
 import { toast } from "@/hooks/use-toast";
+import { useProducts, useBrands } from "@/hooks/useProducts";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -16,6 +18,9 @@ const Index = () => {
     category: "all",
     deliveryOption: "all",
   });
+
+  const { data: products = [], isLoading: productsLoading } = useProducts();
+  const { data: brands = [], isLoading: brandsLoading } = useBrands();
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -47,7 +52,7 @@ const Index = () => {
 
       return true;
     });
-  }, [selectedCategory, filters]);
+  }, [selectedCategory, filters, products]);
 
   const handleFavoriteToggle = (productId: string) => {
     toast({
@@ -56,6 +61,7 @@ const Index = () => {
     });
   };
 
+  const isLoading = productsLoading || brandsLoading;
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,13 +88,27 @@ const Index = () => {
           <div className="flex-1">
             <div className="flex items-center justify-between mb-4">
               <p className="text-sm text-muted-foreground">
-                Showing <span className="font-medium text-foreground">{filteredProducts.length}</span> products
+                {isLoading ? (
+                  <Skeleton className="h-4 w-32" />
+                ) : (
+                  <>
+                    Showing <span className="font-medium text-foreground">{filteredProducts.length}</span> products
+                  </>
+                )}
               </p>
             </div>
-            <ProductGrid
-              products={filteredProducts}
-              onFavoriteToggle={handleFavoriteToggle}
-            />
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-80 rounded-lg" />
+                ))}
+              </div>
+            ) : (
+              <ProductGrid
+                products={filteredProducts}
+                onFavoriteToggle={handleFavoriteToggle}
+              />
+            )}
           </div>
         </div>
       </main>
