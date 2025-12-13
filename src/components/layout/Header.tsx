@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Search, ShoppingCart, Heart, Package, User, LogOut, LayoutDashboard, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import tharketyLogo from "@/assets/tharkety-logo.png";
+import tharketyLogoHorizontal from "@/assets/tharkety-logo-horizontal.png";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,6 +22,8 @@ export const Header = () => {
     cartCount
   } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
   
   const handleSignOut = async () => {
     await signOut();
@@ -149,9 +152,13 @@ export const Header = () => {
           </SheetContent>
         </Sheet>
 
-        {/* Logo */}
+        {/* Logo - Use horizontal logo on home page */}
         <Link to="/" className="flex items-center gap-2">
-          <img src={tharketyLogo} alt="Tharkety" className="h-10 object-contain" />
+          <img 
+            src={isHomePage ? tharketyLogoHorizontal : tharketyLogo} 
+            alt="Tharkety" 
+            className={isHomePage ? "h-10 object-contain" : "h-10 object-contain"} 
+          />
         </Link>
 
         {/* Search Bar - Hidden on mobile */}
