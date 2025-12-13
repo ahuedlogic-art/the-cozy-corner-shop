@@ -17,6 +17,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
@@ -36,7 +37,9 @@ const ProductDetail = () => {
   });
 
   const productSizes = product?.sizes || [];
+  const productColors = product?.colors || [];
   const hasSizes = productSizes.length > 0;
+  const hasColors = productColors.length > 0;
 
   const handleAddToCart = async () => {
     if (hasSizes && !selectedSize) {
@@ -47,9 +50,18 @@ const ProductDetail = () => {
       });
       return;
     }
+
+    if (hasColors && !selectedColor) {
+      toast({
+        title: "Please select a color",
+        description: "You must select a color before adding to cart.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     for (let i = 0; i < quantity; i++) {
-      await addToCart(product!.id, selectedSize || undefined);
+      await addToCart(product!.id, selectedSize || undefined, selectedColor || undefined);
     }
     
     toast({
@@ -203,6 +215,29 @@ const ProductDetail = () => {
                     >
                       {size}
                     </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Color Selection */}
+            {hasColors && (
+              <div>
+                <h3 className="font-semibold text-foreground mb-3">Select Color</h3>
+                <div className="flex flex-wrap gap-3">
+                  {productColors.map((color) => (
+                    <button
+                      key={color}
+                      className={cn(
+                        "w-10 h-10 rounded-full border-2 transition-all",
+                        selectedColor === color
+                          ? "border-primary ring-2 ring-primary ring-offset-2"
+                          : "border-border hover:border-muted-foreground"
+                      )}
+                      style={{ backgroundColor: color }}
+                      onClick={() => setSelectedColor(color)}
+                      title={color}
+                    />
                   ))}
                 </div>
               </div>

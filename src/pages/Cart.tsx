@@ -81,9 +81,20 @@ const Cart = () => {
                   <div className="flex-1">
                     <h3 className="font-medium">{item.product?.name}</h3>
                     <p className="text-sm text-muted-foreground">{item.product?.brand}</p>
-                    {item.selected_size && (
-                      <p className="text-sm text-muted-foreground">Size: {item.selected_size}</p>
-                    )}
+                    <div className="flex items-center gap-2 mt-1">
+                      {item.selected_size && (
+                        <span className="text-sm text-muted-foreground">Size: {item.selected_size}</span>
+                      )}
+                      {item.selected_color && (
+                        <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                          Color: 
+                          <span 
+                            className="w-4 h-4 rounded-full border border-border inline-block"
+                            style={{ backgroundColor: item.selected_color }}
+                          />
+                        </span>
+                      )}
+                    </div>
                     <p className="text-lg font-bold mt-2">${item.product?.price.toFixed(2)}</p>
                   </div>
                   <div className="flex flex-col items-end justify-between">
@@ -91,7 +102,7 @@ const Cart = () => {
                       variant="ghost"
                       size="icon"
                       className="text-destructive"
-                      onClick={() => removeFromCart(item.product_id, item.selected_size)}
+                      onClick={() => removeFromCart(item.product_id, item.selected_size, item.selected_color)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -100,7 +111,7 @@ const Cart = () => {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.product_id, item.quantity - 1, item.selected_size)}
+                        onClick={() => updateQuantity(item.product_id, item.quantity - 1, item.selected_size, item.selected_color)}
                       >
                         <Minus className="h-3 w-3" />
                       </Button>
@@ -109,7 +120,7 @@ const Cart = () => {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.product_id, item.quantity + 1, item.selected_size)}
+                        onClick={() => updateQuantity(item.product_id, item.quantity + 1, item.selected_size, item.selected_color)}
                       >
                         <Plus className="h-3 w-3" />
                       </Button>

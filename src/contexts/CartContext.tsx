@@ -8,14 +8,15 @@ interface CartItem {
   product_id: string;
   quantity: number;
   selected_size: string | null;
+  selected_color: string | null;
 }
 
 interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
-  addToCart: (productId: string, size?: string) => Promise<void>;
-  removeFromCart: (productId: string, size?: string | null) => Promise<void>;
-  updateQuantity: (productId: string, quantity: number, size?: string | null) => Promise<void>;
+  addToCart: (productId: string, size?: string, color?: string) => Promise<void>;
+  removeFromCart: (productId: string, size?: string | null, color?: string | null) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number, size?: string | null, color?: string | null) => Promise<void>;
   checkout: () => Promise<boolean>;
   loading: boolean;
   checkoutLoading: boolean;
@@ -54,7 +55,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setLoading(false);
   };
 
-  const addToCart = async (productId: string, size?: string) => {
+  const addToCart = async (productId: string, size?: string, color?: string) => {
     if (!user) {
       toast({
         title: "Please sign in",
@@ -64,13 +65,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    // Find existing item with same product and size
+    // Find existing item with same product, size, and color
     const existingItem = cartItems.find(
-      (item) => item.product_id === productId && item.selected_size === (size || null)
+      (item) => 
+        item.product_id === productId && 
+        item.selected_size === (size || null) &&
+        item.selected_color === (color || null)
     );
 
     if (existingItem) {
-      await updateQuantity(productId, existingItem.quantity + 1, size || null);
+      await updateQuantity(productId, existingItem.quantity + 1, size || null, color || null);
     } else {
       const { error } = await supabase
         .from("cart_items")
@@ -78,7 +82,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           user_id: user.id, 
           product_id: productId, 
           quantity: 1,
-          selected_size: size || null
+          selected_size: size || null,
+          selected_color: color || null
         });
 
       if (error) {
@@ -97,7 +102,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const removeFromCart = async (productId: string, size?: string | null) => {
+  const removeFromCart = async (productId: string, size?: string | null, color?: string | null) => {
     if (!user) return;
 
     let query = supabase
@@ -110,6 +115,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       query = size === null 
         ? query.is("selected_size", null)
         : query.eq("selected_size", size);
+    }
+
+    if (color !== undefined) {
+      query = color === null 
+        ? query.is("selected_color", null)
+        : query.eq("selected_color", color);
     }
 
     const { error } = await query;
@@ -125,11 +136,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateQuantity = async (productId: string, quantity: number, size?: string | null) => {
+  const updateQuantity = async (productId: string, quantity: number, size?: string | null, color?: string | null) => {
     if (!user) return;
 
     if (quantity <= 0) {
-      await removeFromCart(productId, size);
+      await removeFromCart(productId, size, color);
       return;
     }
 
@@ -143,6 +154,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       query = size === null 
         ? query.is("selected_size", null)
         : query.eq("selected_size", size);
+    }
+
+    if (color !== undefined) {
+      color === null 
+        ? query.is("selected_color", null)
+        : query.eq("selected_color", color);
     }
 
     const { error } = await query;

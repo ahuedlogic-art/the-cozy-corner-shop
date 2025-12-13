@@ -23,6 +23,21 @@ import { ImageUpload } from "./ImageUpload";
 
 const AVAILABLE_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45"];
 
+const PRESET_COLORS = [
+  { name: "Black", hex: "#000000" },
+  { name: "White", hex: "#FFFFFF" },
+  { name: "Red", hex: "#EF4444" },
+  { name: "Blue", hex: "#3B82F6" },
+  { name: "Green", hex: "#22C55E" },
+  { name: "Yellow", hex: "#EAB308" },
+  { name: "Purple", hex: "#A855F7" },
+  { name: "Pink", hex: "#EC4899" },
+  { name: "Orange", hex: "#F97316" },
+  { name: "Gray", hex: "#6B7280" },
+  { name: "Navy", hex: "#1E3A8A" },
+  { name: "Brown", hex: "#78350F" },
+];
+
 const productSchema = z.object({
   name: z.string().min(1, "Name is required").max(200),
   description: z.string().max(1000).optional(),
@@ -32,6 +47,7 @@ const productSchema = z.object({
   category: z.string().min(1, "Category is required"),
   brand: z.string().min(1, "Brand is required"),
   sizes: z.array(z.string()).default([]),
+  colors: z.array(z.string()).default([]),
   stock_quantity: z.coerce.number().int().min(0, "Quantity must be 0 or more"),
   is_top_item: z.boolean().default(false),
   in_stock: z.boolean().default(true),
@@ -65,6 +81,7 @@ export function ProductForm({
       category: "",
       brand: "",
       sizes: [],
+      colors: [],
       stock_quantity: 0,
       is_top_item: false,
       in_stock: true,
@@ -217,6 +234,37 @@ export function ProductForm({
                       >
                         {size}
                       </Button>
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="colors"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Available Colors</FormLabel>
+                  <div className="flex flex-wrap gap-2">
+                    {PRESET_COLORS.map((color) => (
+                      <button
+                        key={color.hex}
+                        type="button"
+                        className={`w-8 h-8 rounded-full border-2 transition-all ${
+                          field.value?.includes(color.hex)
+                            ? "border-primary ring-2 ring-primary ring-offset-2"
+                            : "border-border"
+                        }`}
+                        style={{ backgroundColor: color.hex }}
+                        title={color.name}
+                        onClick={() => {
+                          const newColors = field.value?.includes(color.hex)
+                            ? field.value.filter((c) => c !== color.hex)
+                            : [...(field.value || []), color.hex];
+                          field.onChange(newColors);
+                        }}
+                      />
                     ))}
                   </div>
                   <FormMessage />
