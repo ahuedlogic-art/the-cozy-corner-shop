@@ -51,7 +51,7 @@ export const FilterSidebar = ({
   };
 
   return (
-    <aside className="w-64 shrink-0 space-y-6 p-4 bg-card rounded-2xl border border-border shadow-card">
+    <aside className="w-64 shrink-0 space-y-6 p-4 bg-card rounded-2xl border border-border shadow-card sticky top-6 h-fit max-h-[calc(100vh-3rem)] overflow-y-auto">
       {/* Price Range */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
