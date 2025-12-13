@@ -10,6 +10,7 @@ import { Heart, Star, ShoppingCart, ArrowLeft, Truck, Shield, RotateCcw } from "
 import { cn } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
+import { ProductReviews } from "@/components/reviews/ProductReviews";
 
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -282,6 +283,11 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-12 pt-8 border-t border-border">
+          <ProductReviews productId={product.id} />
         </div>
       </main>
     </div>
