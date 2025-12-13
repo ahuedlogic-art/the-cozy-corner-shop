@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import tharketyLogo from "@/assets/tharkety-logo.jpg";
 export const Header = () => {
   const {
     user,
@@ -27,12 +28,7 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between gap-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-secondary-foreground">
-              <span className="text-primary-foreground font-bold text-lg">M</span>
-            </div>
-            <span className="font-bold text-xl tracking-tight text-foreground">​MARKETY                     </span>
-          </div>
+          <img src={tharketyLogo} alt="Tharkety" className="h-10 object-contain" />
         </Link>
 
         {/* Search Bar */}
