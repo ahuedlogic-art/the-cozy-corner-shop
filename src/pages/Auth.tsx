@@ -164,7 +164,7 @@ const Auth = () => {
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <img src={tharketyLogo} alt="Tharkety" className="h-16 mx-auto mb-4 object-contain" />
+            <img src={tharketyLogo} alt="Tharkety" className="h-28 mx-auto mb-4 object-contain" />
             <p className="text-gray-500 text-sm">Your premium marketplace</p>
           </div>
 
