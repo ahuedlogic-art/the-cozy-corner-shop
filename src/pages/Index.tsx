@@ -1,20 +1,18 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, Shield, TrendingUp } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { CategoryChips } from "@/components/marketplace/CategoryChips";
 import { FilterSidebar } from "@/components/marketplace/FilterSidebar";
 import { ProductGrid } from "@/components/marketplace/ProductGrid";
+import { HeroCollection } from "@/components/home/HeroCollection";
+import { PopularCollections } from "@/components/home/PopularCollections";
+import { MarketplaceStats } from "@/components/home/MarketplaceStats";
+import { TrendingTable } from "@/components/home/TrendingTable";
 import { categories } from "@/data/mockData";
 import { FilterState } from "@/types/product";
 import { toast } from "@/hooks/use-toast";
 import { useProducts, useBrands } from "@/hooks/useProducts";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import nftHero1 from "@/assets/nft-hero-1.jpg";
-import nftHero2 from "@/assets/nft-hero-2.jpg";
-import nftHero3 from "@/assets/nft-hero-3.jpg";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -44,145 +42,27 @@ const Index = () => {
   };
 
   const isLoading = productsLoading || brandsLoading;
-
-  // Get top 3 items for the hero featured section
-  const featuredNFTs = products.filter(p => p.isTopItem).slice(0, 3);
+  const featuredProducts = products.filter((p) => p.isTopItem).slice(0, 5);
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute inset-0 gradient-hero" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] gradient-glow opacity-50" />
-        
-        <div className="container relative py-16 md:py-24">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left - Text */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
-                <Zap className="h-4 w-4" />
-                The Future of Digital Art
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                Discover & Collect{" "}
-                <span className="text-gradient">Extraordinary</span>{" "}
-                NFTs
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8 max-w-lg">
-                Dive into the world of digital collectibles. Buy, sell, and trade unique NFTs from creators worldwide on the VOOPO marketplace.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="gradient-primary rounded-full gap-2 shadow-neon">
-                  Explore Collection
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-                <Link to="/auth">
-                  <Button size="lg" variant="outline" className="rounded-full border-border hover:border-primary">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
+      {/* Hero - Featured Collection */}
+      {isLoading ? (
+        <Skeleton className="h-[500px] w-full" />
+      ) : (
+        <HeroCollection featuredProducts={featuredProducts.length > 0 ? featuredProducts : products.slice(0, 1)} />
+      )}
 
-              {/* Stats */}
-              <div className="flex gap-8 mt-12">
-                <div>
-                  <p className="text-3xl font-bold text-gradient">{products.length}+</p>
-                  <p className="text-sm text-muted-foreground">NFTs Listed</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-gradient">50+</p>
-                  <p className="text-sm text-muted-foreground">Artists</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-gradient">10K+</p>
-                  <p className="text-sm text-muted-foreground">Collectors</p>
-                </div>
-              </div>
-            </motion.div>
+      {/* Popular Collections Carousel */}
+      {!isLoading && <PopularCollections products={products} />}
 
-            {/* Right - Featured NFTs */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="hidden md:block"
-            >
-              <div className="relative">
-                {/* Main featured card */}
-                <div className="relative rounded-3xl overflow-hidden neon-border">
-                  <img
-                    src={nftHero1}
-                    alt="Featured NFT - Cosmic Geometry"
-                    className="w-full aspect-square object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background/90 to-transparent">
-                    <p className="text-lg font-bold">Cosmic Geometry #001</p>
-                    <p className="text-primary font-semibold">2.5 ETH</p>
-                  </div>
-                </div>
+      {/* Stats Section */}
+      <MarketplaceStats totalNFTs={products.length} />
 
-                {/* Floating smaller cards */}
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ repeat: Infinity, duration: 3 }}
-                  className="absolute -right-6 top-8 w-28 h-28 rounded-2xl overflow-hidden neon-border shadow-lg"
-                >
-                  <img src={nftHero2} alt="Galaxy Cat NFT" className="w-full h-full object-cover" />
-                </motion.div>
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ repeat: Infinity, duration: 4 }}
-                  className="absolute -left-6 bottom-16 w-24 h-24 rounded-2xl overflow-hidden neon-border shadow-lg"
-                >
-                  <img src={nftHero3} alt="Crystal Palace NFT" className="w-full h-full object-cover" />
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Strip */}
-      <section className="border-y border-border bg-card/50">
-        <div className="container py-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Shield className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="font-semibold text-sm">Verified Authenticity</p>
-                <p className="text-xs text-muted-foreground">Every NFT verified on blockchain</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <TrendingUp className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="font-semibold text-sm">Market Analytics</p>
-                <p className="text-xs text-muted-foreground">Real-time price tracking</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Zap className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="font-semibold text-sm">Instant Transactions</p>
-                <p className="text-xs text-muted-foreground">Low gas fees & fast settlement</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Trending Table */}
+      {!isLoading && <TrendingTable products={products} />}
 
       {/* Marketplace */}
       <main className="container py-8">
