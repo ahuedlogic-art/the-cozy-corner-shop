@@ -69,7 +69,12 @@ export const ProductCard = ({ product, onFavoriteToggle }: ProductCardProps) => 
       {/* Content */}
       <div className="p-4 space-y-3">
         <div>
-          <p className="text-xs text-primary font-medium uppercase tracking-wide mb-1">{product.brand}</p>
+          <p
+            className="text-xs text-primary font-medium uppercase tracking-wide mb-1 hover:underline cursor-pointer"
+            onClick={(e) => { e.stopPropagation(); navigate(`/creator/${encodeURIComponent(product.brand)}`); }}
+          >
+            {product.brand}
+          </p>
           <h3 className="font-medium text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
             {product.name}
           </h3>
