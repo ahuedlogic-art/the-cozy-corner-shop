@@ -177,10 +177,13 @@ export type Database = {
       }
       products: {
         Row: {
+          blockchain: string | null
           brand: string
           category: string
+          collection_name: string | null
           colors: string[] | null
           created_at: string
+          creator_name: string | null
           description: string | null
           id: string
           image: string | null
@@ -191,15 +194,21 @@ export type Database = {
           price: number
           rating: number | null
           review_count: number | null
+          royalty_percentage: number | null
           sizes: string[] | null
           stock_quantity: number
+          token_id: string | null
+          token_standard: string | null
           updated_at: string
         }
         Insert: {
+          blockchain?: string | null
           brand: string
           category: string
+          collection_name?: string | null
           colors?: string[] | null
           created_at?: string
+          creator_name?: string | null
           description?: string | null
           id?: string
           image?: string | null
@@ -210,15 +219,21 @@ export type Database = {
           price: number
           rating?: number | null
           review_count?: number | null
+          royalty_percentage?: number | null
           sizes?: string[] | null
           stock_quantity?: number
+          token_id?: string | null
+          token_standard?: string | null
           updated_at?: string
         }
         Update: {
+          blockchain?: string | null
           brand?: string
           category?: string
+          collection_name?: string | null
           colors?: string[] | null
           created_at?: string
+          creator_name?: string | null
           description?: string | null
           id?: string
           image?: string | null
@@ -229,8 +244,11 @@ export type Database = {
           price?: number
           rating?: number | null
           review_count?: number | null
+          royalty_percentage?: number | null
           sizes?: string[] | null
           stock_quantity?: number
+          token_id?: string | null
+          token_standard?: string | null
           updated_at?: string
         }
         Relationships: []
