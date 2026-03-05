@@ -12,6 +12,9 @@ import { useProducts, useBrands } from "@/hooks/useProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import nftHero1 from "@/assets/nft-hero-1.jpg";
+import nftHero2 from "@/assets/nft-hero-2.jpg";
+import nftHero3 from "@/assets/nft-hero-3.jpg";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -114,42 +117,32 @@ const Index = () => {
               <div className="relative">
                 {/* Main featured card */}
                 <div className="relative rounded-3xl overflow-hidden neon-border">
-                  {featuredNFTs[0] ? (
-                    <img
-                      src={featuredNFTs[0].image}
-                      alt={featuredNFTs[0].name}
-                      className="w-full aspect-square object-cover"
-                    />
-                  ) : (
-                    <div className="w-full aspect-square bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                      <span className="text-6xl">🎨</span>
-                    </div>
-                  )}
+                  <img
+                    src={nftHero1}
+                    alt="Featured NFT - Cosmic Geometry"
+                    className="w-full aspect-square object-cover"
+                  />
                   <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background/90 to-transparent">
-                    <p className="text-lg font-bold">{featuredNFTs[0]?.name || "Featured NFT"}</p>
-                    <p className="text-primary font-semibold">{featuredNFTs[0] ? `${featuredNFTs[0].price} ETH` : "Coming Soon"}</p>
+                    <p className="text-lg font-bold">Cosmic Geometry #001</p>
+                    <p className="text-primary font-semibold">2.5 ETH</p>
                   </div>
                 </div>
 
                 {/* Floating smaller cards */}
-                {featuredNFTs[1] && (
-                  <motion.div
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ repeat: Infinity, duration: 3 }}
-                    className="absolute -right-6 top-8 w-28 h-28 rounded-2xl overflow-hidden neon-border shadow-lg"
-                  >
-                    <img src={featuredNFTs[1].image} alt="" className="w-full h-full object-cover" />
-                  </motion.div>
-                )}
-                {featuredNFTs[2] && (
-                  <motion.div
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ repeat: Infinity, duration: 4 }}
-                    className="absolute -left-6 bottom-16 w-24 h-24 rounded-2xl overflow-hidden neon-border shadow-lg"
-                  >
-                    <img src={featuredNFTs[2].image} alt="" className="w-full h-full object-cover" />
-                  </motion.div>
-                )}
+                <motion.div
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ repeat: Infinity, duration: 3 }}
+                  className="absolute -right-6 top-8 w-28 h-28 rounded-2xl overflow-hidden neon-border shadow-lg"
+                >
+                  <img src={nftHero2} alt="Galaxy Cat NFT" className="w-full h-full object-cover" />
+                </motion.div>
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ repeat: Infinity, duration: 4 }}
+                  className="absolute -left-6 bottom-16 w-24 h-24 rounded-2xl overflow-hidden neon-border shadow-lg"
+                >
+                  <img src={nftHero3} alt="Crystal Palace NFT" className="w-full h-full object-cover" />
+                </motion.div>
               </div>
             </motion.div>
           </div>
