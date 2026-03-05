@@ -171,7 +171,7 @@ const ProductDetail = () => {
                     <span className="text-lg text-muted-foreground line-through">
                       {Number(product.original_price).toFixed(2)} ETH
                     </span>
-                    <Badge variant="secondary" className="bg-green-500/10 text-green-400 border-green-500/20">
+                    <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
                       {Math.round((1 - Number(product.price) / Number(product.original_price)) * 100)}% OFF
                     </Badge>
                   </>
@@ -234,7 +234,7 @@ const ProductDetail = () => {
               <div className="h-8 w-px bg-border" />
               <div>
                 <p className="text-xs text-muted-foreground">Status</p>
-                <p className={cn("font-bold", product.in_stock ? "text-green-400" : "text-destructive")}>
+                <p className={cn("font-bold", product.in_stock ? "text-success" : "text-destructive")}>
                   {product.in_stock ? "Listed" : "Sold Out"}
                 </p>
               </div>
