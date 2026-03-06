@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Home, MessageSquare, BarChart3, Heart, Store, Gavel, User, Settings, UserCircle,
-  Search, Bell, LogOut, ChevronRight, Clock, Heart as HeartIcon, Flame
+  Search, Bell, LogOut, Clock, Flame
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProducts } from "@/hooks/useProducts";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import tharkety from "@/assets/tharkety-logo.png";
 
 const ETH_RATE = 0.00042;
 const toEth = (usd: number) => (usd * ETH_RATE).toFixed(3);
