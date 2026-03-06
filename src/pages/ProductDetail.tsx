@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Heart, Star, ShoppingCart, ArrowLeft, Globe, Layers, Hash, Percent, User, FolderOpen, ExternalLink } from "lucide-react";
+import { BidSection } from "@/components/bids/BidSection";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "@/hooks/use-toast";
@@ -196,6 +197,9 @@ const ProductDetail = () => {
                 </Button>
               </div>
             </div>
+
+            {/* Bid Section */}
+            <BidSection productId={product.id} currentPrice={Number(product.price)} />
 
             {/* Description */}
             <div>
