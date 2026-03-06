@@ -222,7 +222,7 @@ const UserDashboard = () => {
                           <div className="border-l border-border pl-4">
                             <p className="text-xs text-muted-foreground">Highest Bid</p>
                             <p className="text-sm font-bold font-['Space_Grotesk'] text-primary">
-                              {toEth(product.price)} ETH
+                              {bidsByProduct[product.id]?.highest ? `${bidsByProduct[product.id].highest.toFixed(4)} ETH` : `${toEth(product.price)} ETH`}
                             </p>
                           </div>
                         </div>
@@ -261,7 +261,7 @@ const UserDashboard = () => {
                       <span className="text-xs font-mono text-muted-foreground">02:32:07</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-muted-foreground">{product.reviewCount || 43}</span>
+                      <span className="text-xs text-muted-foreground">{bidsByProduct[product.id]?.count || product.reviewCount || 0}</span>
                       <Heart className="h-3 w-3 text-muted-foreground hover:text-primary transition-colors" />
                     </div>
                   </div>
