@@ -48,6 +48,28 @@ const UserDashboard = () => {
     }
   }, [user]);
 
+  // Fetch bid counts per product
+  const { data: bidData = [] } = useQuery({
+    queryKey: ["dashboard-bids"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("bids")
+        .select("product_id, amount")
+        .eq("status", "active")
+        .order("amount", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Group bids by product
+  const bidsByProduct = bidData.reduce((acc: Record<string, { count: number; highest: number }>, bid) => {
+    if (!acc[bid.product_id]) acc[bid.product_id] = { count: 0, highest: 0 };
+    acc[bid.product_id].count++;
+    acc[bid.product_id].highest = Math.max(acc[bid.product_id].highest, Number(bid.amount));
+    return acc;
+  }, {});
+
   const featuredProducts = products.filter(p => p.isTopItem).slice(0, 2);
   const hotBids = products.slice(0, 10);
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Creator";
