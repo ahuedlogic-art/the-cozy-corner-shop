@@ -1,0 +1,1 @@
+UPDATE products SET image = 'https://tuhwffwfgpmlgkywypqx.supabase.co/storage/v1/object/public/product-images/cryptoartlab.png' WHERE brand = 'CryptoArtLab';
