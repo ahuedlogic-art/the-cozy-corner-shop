@@ -48,7 +48,7 @@ const UserDashboard = () => {
     }
   }, [user]);
 
-  const featuredProducts = products.filter(p => p.is_top_item).slice(0, 2);
+  const featuredProducts = products.filter(p => p.isTopItem).slice(0, 2);
   const hotBids = products.slice(0, 10);
   const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Creator";
 
@@ -239,7 +239,7 @@ const UserDashboard = () => {
                       <span className="text-xs font-mono text-muted-foreground">02:32:07</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-muted-foreground">{product.review_count || 43}</span>
+                      <span className="text-xs text-muted-foreground">{product.reviewCount || 43}</span>
                       <Heart className="h-3 w-3 text-muted-foreground hover:text-primary transition-colors" />
                     </div>
                   </div>
