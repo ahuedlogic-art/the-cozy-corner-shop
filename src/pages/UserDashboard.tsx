@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Home, MessageSquare, BarChart3, Heart, Store, Gavel, User, Settings, UserCircle,
-  Search, Bell, LogOut, ChevronRight, Clock, Heart as HeartIcon, Flame
+  Search, Bell, LogOut, Clock, Flame
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProducts } from "@/hooks/useProducts";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import tharkety from "@/assets/tharkety-logo.png";
 
 const ETH_RATE = 0.00042;
 const toEth = (usd: number) => (usd * ETH_RATE).toFixed(3);
@@ -47,6 +47,28 @@ const UserDashboard = () => {
         .then(({ count }) => setFavCount(count || 0));
     }
   }, [user]);
+
+  // Fetch bid counts per product
+  const { data: bidData = [] } = useQuery({
+    queryKey: ["dashboard-bids"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("bids")
+        .select("product_id, amount")
+        .eq("status", "active")
+        .order("amount", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Group bids by product
+  const bidsByProduct = bidData.reduce((acc: Record<string, { count: number; highest: number }>, bid) => {
+    if (!acc[bid.product_id]) acc[bid.product_id] = { count: 0, highest: 0 };
+    acc[bid.product_id].count++;
+    acc[bid.product_id].highest = Math.max(acc[bid.product_id].highest, Number(bid.amount));
+    return acc;
+  }, {});
 
   const featuredProducts = products.filter(p => p.isTopItem).slice(0, 2);
   const hotBids = products.slice(0, 10);
@@ -200,7 +222,7 @@ const UserDashboard = () => {
                           <div className="border-l border-border pl-4">
                             <p className="text-xs text-muted-foreground">Highest Bid</p>
                             <p className="text-sm font-bold font-['Space_Grotesk'] text-primary">
-                              {toEth(product.price)} ETH
+                              {bidsByProduct[product.id]?.highest ? `${bidsByProduct[product.id].highest.toFixed(4)} ETH` : `${toEth(product.price)} ETH`}
                             </p>
                           </div>
                         </div>
@@ -239,7 +261,7 @@ const UserDashboard = () => {
                       <span className="text-xs font-mono text-muted-foreground">02:32:07</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-muted-foreground">{product.reviewCount || 43}</span>
+                      <span className="text-xs text-muted-foreground">{bidsByProduct[product.id]?.count || product.reviewCount || 0}</span>
                       <Heart className="h-3 w-3 text-muted-foreground hover:text-primary transition-colors" />
                     </div>
                   </div>
