@@ -32,7 +32,7 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) navigate("/");
+    if (user) navigate("/dashboard");
   }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +54,7 @@ const Auth = () => {
           toast({ title: "Login failed", description: error.message.includes("Invalid login") ? "Invalid email or password." : error.message, variant: "destructive" });
         } else {
           toast({ title: "Welcome back!", description: "You have successfully logged in." });
-          navigate("/");
+          navigate("/dashboard");
         }
       } else {
         const result = signupSchema.safeParse({ email, password, name });
@@ -70,7 +70,7 @@ const Auth = () => {
           toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
         } else {
           toast({ title: "Account created!", description: "Your account has been created successfully." });
-          navigate("/");
+          navigate("/dashboard");
         }
       }
     } catch {
