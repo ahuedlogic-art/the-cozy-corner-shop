@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Product } from "@/types/product";
 import nftHero1 from "@/assets/nft-hero-1.jpg";
+
+const SLIDE_DURATION = 6000;
 
 interface HeroCollectionProps {
   featuredProducts: Product[];
@@ -13,20 +15,44 @@ interface HeroCollectionProps {
 export const HeroCollection = ({ featuredProducts }: HeroCollectionProps) => {
   const slides = featuredProducts.slice(0, 3);
   const [current, setCurrent] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const startTime = useRef(Date.now());
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % slides.length);
+    startTime.current = Date.now();
+    setProgress(0);
   }, [slides.length]);
 
   const prev = useCallback(() => {
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+    startTime.current = Date.now();
+    setProgress(0);
   }, [slides.length]);
 
+  const goTo = useCallback((i: number) => {
+    setCurrent(i);
+    startTime.current = Date.now();
+    setProgress(0);
+  }, []);
+
+  // Progress bar + auto-advance
   useEffect(() => {
     if (slides.length <= 1) return;
-    const timer = setInterval(next, 5000);
-    return () => clearInterval(timer);
-  }, [next, slides.length]);
+    let raf: number;
+    const tick = () => {
+      const elapsed = Date.now() - startTime.current;
+      const pct = Math.min(elapsed / SLIDE_DURATION, 1);
+      setProgress(pct);
+      if (pct >= 1) {
+        next();
+      } else {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [next, slides.length, current]);
 
   if (slides.length === 0) return null;
 
@@ -34,11 +60,11 @@ export const HeroCollection = ({ featuredProducts }: HeroCollectionProps) => {
 
   return (
     <section className="relative overflow-hidden h-[520px] md:h-[600px]">
-      {/* Background slides */}
+      {/* Background slides with blur */}
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 0, scale: 1.08 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.7 }}
@@ -47,10 +73,10 @@ export const HeroCollection = ({ featuredProducts }: HeroCollectionProps) => {
           <img
             src={active?.image || nftHero1}
             alt={active?.name || "Featured collection"}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover blur-[2px] scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20 backdrop-blur-[6px]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
         </motion.div>
       </AnimatePresence>
 
@@ -104,41 +130,51 @@ export const HeroCollection = ({ featuredProducts }: HeroCollectionProps) => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Navigation */}
+        {/* Navigation + Progress */}
         {slides.length > 1 && (
-          <div className="absolute bottom-16 md:bottom-20 right-6 md:right-12 flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full border-border/50 bg-background/30 backdrop-blur-sm h-9 w-9 hover:bg-background/50"
-              onClick={prev}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
+          <div className="absolute bottom-16 md:bottom-20 right-6 md:right-12 flex flex-col items-end gap-3">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full border-border/50 bg-background/30 backdrop-blur-md h-9 w-9 hover:bg-background/50"
+                onClick={prev}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
 
-            {/* Dots */}
-            <div className="flex gap-1.5">
-              {slides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === current
-                      ? "w-6 bg-primary"
-                      : "w-1.5 bg-muted-foreground/40 hover:bg-muted-foreground/60"
-                  }`}
-                />
-              ))}
+              {/* Progress bars per slide */}
+              <div className="flex gap-1.5">
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i)}
+                    className="relative h-1 w-10 rounded-full bg-muted-foreground/20 overflow-hidden"
+                  >
+                    <div
+                      className="absolute inset-y-0 left-0 rounded-full bg-primary transition-none"
+                      style={{
+                        width:
+                          i === current
+                            ? `${progress * 100}%`
+                            : i < current
+                            ? "100%"
+                            : "0%",
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full border-border/50 bg-background/30 backdrop-blur-md h-9 w-9 hover:bg-background/50"
+                onClick={next}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
-
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full border-border/50 bg-background/30 backdrop-blur-sm h-9 w-9 hover:bg-background/50"
-              onClick={next}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
           </div>
         )}
       </div>

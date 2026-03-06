@@ -7,6 +7,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { z } from "zod";
+import nftHero1 from "@/assets/nft-hero-1.jpg";
+import nftHero2 from "@/assets/nft-hero-2.jpg";
+import nftHero3 from "@/assets/nft-hero-3.jpg";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -77,31 +80,59 @@ const Auth = () => {
     }
   };
 
+  const photos = [nftHero1, nftHero2, nftHero3];
+
   return (
     <div className="min-h-screen flex">
-      {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden gradient-hero">
-        <div className="absolute inset-0 gradient-glow" />
-        <Link to="/" className="absolute top-6 left-6 z-10 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+      {/* Left Panel - Photo Collage */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+        {/* Blurred background layer */}
+        <div className="absolute inset-0">
+          <img src={nftHero1} alt="" className="w-full h-full object-cover scale-110 blur-[20px]" />
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" />
+        </div>
+
+        <Link to="/" className="absolute top-6 left-6 z-20 flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors">
           <ArrowLeft className="h-5 w-5" />
           <span className="text-sm font-medium">Back to Marketplace</span>
         </Link>
-        <div className="flex-1 flex flex-col items-center justify-center p-12">
-          <span className="text-gradient text-5xl font-bold tracking-tight mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>VOOPO</span>
-          <p className="text-xl text-muted-foreground text-center max-w-sm mb-8">
+
+        <div className="relative flex-1 flex flex-col items-center justify-center p-12 gap-8">
+          <span className="text-gradient text-5xl font-bold tracking-tight z-10" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>VOOPO</span>
+          <p className="text-lg text-muted-foreground text-center max-w-sm z-10">
             The premier NFT marketplace for digital collectors and creators
           </p>
-          <div className="grid grid-cols-3 gap-4 w-full max-w-sm">
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 neon-border flex items-center justify-center text-3xl">🎨</div>
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-accent/20 to-primary/20 neon-border flex items-center justify-center text-3xl mt-8">🖼️</div>
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 neon-border flex items-center justify-center text-3xl">🎭</div>
+
+          {/* Photo grid */}
+          <div className="grid grid-cols-3 gap-3 w-full max-w-md z-10">
+            {photos.map((src, i) => (
+              <div
+                key={i}
+                className={`overflow-hidden rounded-2xl border border-border/30 shadow-lg ${
+                  i === 1 ? "row-span-2" : "aspect-square"
+                }`}
+              >
+                <img
+                  src={src}
+                  alt={`NFT preview ${i + 1}`}
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                />
+              </div>
+            ))}
           </div>
+
+          {/* Floating blur orbs */}
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-primary/20 blur-[60px]" />
+          <div className="absolute bottom-1/3 right-1/4 w-40 h-40 rounded-full bg-accent/20 blur-[80px]" />
         </div>
       </div>
 
       {/* Right Panel */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-background">
-        <div className="w-full max-w-md space-y-8">
+      <div className="flex-1 flex items-center justify-center p-8 bg-background relative overflow-hidden">
+        {/* Subtle blur orb on form side */}
+        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-primary/10 blur-[100px]" />
+
+        <div className="w-full max-w-md space-y-8 relative z-10">
           <div className="text-center space-y-2">
             <span className="text-gradient text-3xl font-bold tracking-tight lg:hidden" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>VOOPO</span>
             <h1 className="text-2xl font-bold" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
